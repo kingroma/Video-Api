@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<!-- sqlSession : mapper형태의 xml sql이 존재 하는 위치 지정 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource"       ref="dataSource" />
+		<property name="typeAliasesPackage" value="com.mydefault.app" />
+		<property name="configLocation"   value="classpath:/config/sql-mapper-config.xml" />
+		<property name="mapperLocations"  value="classpath:/mappers/com/mydefault/app/**/*.xml" />
+	</bean>
+ 
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mydefault.app.**.serviceimpl" />
+    </bean>
+
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSession" />
+	</bean>
+</beans>

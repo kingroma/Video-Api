@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydefault.app.common.quartz.serviceimpl.QuartzMapper">
+	<!--	<![CDATA[, ]]>	-->
+	
+	<select id="selectQuartzList" resultType="QuartzVO">
+		SELECT 
+			  T1.BATCH_ID
+			, T1.BATCH_NM
+			, T1.JOB_SE_CD_ID
+            , T1.JOB_EXECUT
+            , T1.JOB_PARAM
+            , T1.PRECDNG_AT
+            , T1.JOB_PD_CD_ID
+            , T1.JOB_BGNDE
+            , T1.JOB_ENDDE
+            , T1.JOB_CYCLE_CD_ID
+            , T2.JOB_SN
+            , T2.JOB_DE
+            , IFNULL(T2.JOB_WEEK, '*') JOB_WEEK
+            , IFNULL(T2.JOB_MONTH, '*') JOB_MONTH
+            , IFNULL(T2.JOB_DAY, '?') JOB_DAY
+            , IFNULL(T2.JOB_HOUR, '00') JOB_HOUR
+            , IFNULL(T2.JOB_MINUTE, '00') JOB_MINUTE
+		FROM TB_CO_BATCH T1
+		INNER JOIN TB_CO_BATCH_JOB T2
+			ON T1.BATCH_ID = T2.BATCH_ID
+		WHERE T1.USE_AT = 'Y'
+		ORDER BY T1.BATCH_ID
+	</select>
+	
+	<insert id="quartzResult">
+		<selectKey keyProperty="resultSn" resultType="String" order="BEFORE">
+			SELECT IFNULL(MAX(RESULT_SN),0) + 1 FROM TB_CO_BATCH_RESULT WHERE BATCH_ID = #{batchId}
+		</selectKey>
+		INSERT INTO TB_CO_BATCH_RESULT(
+			  BATCH_ID, RESULT_SN, 
+			  BATCH_NM, BATCH_BGNDT, BATCH_ENDDT, RESULT_STTUS_CD_ID, 
+			  RESULT_MSG, RGS_DT, JOB_SN, 
+			  BATCH_EXC_CD_ID
+		) VALUES (
+			  #{batchId}, #{resultSn}, #{batchNm}, #{batchBgndt}, #{batchEnddt}, IFNULL(#{resultSttusCdId}, 'COM_057_002')
+		    , #{resultMsg}, NOW(), IFNULL(#{jobSn}, 0), #{batchExcCdId}
+		)
+	</insert>
+	
+</mapper>
