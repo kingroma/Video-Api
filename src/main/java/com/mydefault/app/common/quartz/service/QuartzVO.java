@@ -1,8 +1,6 @@
 package com.mydefault.app.common.quartz.service;
 
 public class QuartzVO {
-
-
 	//TB_CO_BATCH
 	private String batchId = "";
 	private String batchNm = "";

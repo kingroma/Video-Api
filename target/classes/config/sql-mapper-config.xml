@@ -9,4 +9,8 @@
     <typeAliases>
 		<typeAlias alias="MyMap" type="com.mydefault.app.common.util.MyMap"/>
     </typeAliases>
+    
+    <plugins>
+        <plugin interceptor="com.mydefault.app.common.util.MyBatisLogger" />
+    </plugins>
 </configuration>

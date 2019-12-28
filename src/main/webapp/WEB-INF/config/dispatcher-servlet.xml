@@ -11,6 +11,17 @@
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
  
+ 	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>
+    
+ 	<bean id="myInterceptor" class="com.mydefault.app.common.util.MyInterceptor" />
+	
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"> 
+		<property name="interceptors">
+			<list>
+				<ref bean="myInterceptor"/>				
+			</list>
+		</property>
+	</bean>
 	
 	<!-- for JFile -->	  
 	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>

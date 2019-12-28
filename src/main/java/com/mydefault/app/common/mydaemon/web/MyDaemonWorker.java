@@ -9,7 +9,7 @@ import com.mydefault.app.common.mydaemon.service.MyDaemonVO;
 public class MyDaemonWorker extends Thread{
 	private MyDaemonVO vo = null ; 
 	
-	private ApplicationContext applicationContext = null ; 
+	private MyDaemonExecutor myDaemonExecutor = null ; 
 	
 	private boolean runnable = true ;
 	
@@ -25,7 +25,7 @@ public class MyDaemonWorker extends Thread{
 	
 	public MyDaemonWorker ( MyDaemonVO vo , ApplicationContext applicationContext ) { 
 		this.vo = vo ; 
-		this.applicationContext = applicationContext ;
+		this.myDaemonExecutor = new MyDaemonExecutor(vo,applicationContext);
 	}
 	
 	@Override
@@ -51,8 +51,7 @@ public class MyDaemonWorker extends Thread{
 				
 				if ( lastWork.getTime() + ( minute * minToSec * sToMs ) < current.getTime() ) {
 					lastWork = current ;
-					System.out.println("hello world" + new Date());
-					
+					myDaemonExecutor.run();
 				}
 				Thread.sleep(1 * sToMs);
 			} catch (Exception e) {

@@ -1,6 +1,9 @@
 package com.mydefault.app.common.quartz.service;
 
-public class QuartzType {
+import java.io.Serializable;
+
+public class QuartzType implements Serializable {
+	private static final long serialVersionUID = 1L;
 	// 실행 구분 
 	public static String ALL_DAY = "매번" ; // 매번 COM_053_001 1 
 	
