@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydefault.app.common.mydaemon.serviceimpl.MyDaemonMapper">
+	<!--	<![CDATA[, ]]>	-->
+	<select id='list' resultType="MyDaemonVO">
+		SELECT 
+			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM, 
+		    D.DAEMON_ID , 
+		    D.DAEMON_NM , 
+		    D.DAEMON_TEXT , 
+		    D.CONTROLLER_NM , 
+		    D.INTERVAL_AT , 
+		    D.MINUTE , 
+		    D.BGNDE , 
+		    D.ENDDE 
+		    
+		FROM TB_MY_DAEMON D
+		WHERE (@rownum:=0)=0
+		ORDER BY D.DAEMON_ID 
+	</select>
+	
+	
+</mapper>

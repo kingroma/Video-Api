@@ -1,5 +1,6 @@
 package com.mydefault.app.common.util;
 
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
@@ -57,8 +58,9 @@ public class StringUtil {
 	public static String getPrintStackTraceString(Exception e){
 		if(e == null) return "";
 		try{
+			logger.error(e.getMessage());
 			StringWriter errors = new StringWriter();
-			//e.printStackTrace(new PrintWriter(errors));
+			e.printStackTrace(new PrintWriter(errors));
 		   	return errors.toString();
 		} catch(RuntimeException ebe){
 			return "";
@@ -111,6 +113,8 @@ public class StringUtil {
 	}	
 
 	public static void exceptionMsg(Class<?> classNm, String errorMsg, Exception e){		
+		logger.error(e.getMessage());
+		
 		if(classNm != null){
 			logger.error("Class Nm : "+classNm.getName());
 		} 		
@@ -123,6 +127,7 @@ public class StringUtil {
 	}
 	
 	public static String getExceptionMsg(Class<?> classNm, Exception e, String message){
+		logger.error(e.getMessage());
 		String extrcMsg = "";
 		if(e.getMessage() != null && e.getMessage().startsWith(GenericCode.ERROR_CD)){
 			extrcMsg = e.getMessage() + GenericCode.ERROR_CD;	
