@@ -10,14 +10,28 @@
 		    D.DAEMON_TEXT , 
 		    D.CONTROLLER_NM , 
 		    D.INTERVAL_AT , 
+		    ( CASE WHEN D.INTERVAL_AT = 'Y' THEN '반복' ELSE '일회' END  ) AS INTERVAL_AT_NM , 
 		    D.MINUTE , 
+            (
+				CONCAT(
+					CAST( ( D.MINUTE / 3600 ) AS INT ) , '시 ' ,
+                    CAST( ( D.MINUTE % 3600 / 60 ) AS INT ) , '분 ' 
+                ) 
+                
+			)  AS MINUTE_EVERY_DAY_TIME ,   
 		    D.BGNDE , 
-		    D.ENDDE 
+            DATE_FORMAT(D.BGNDE , "%Y-%m-%d") AS BGNDE_FORMAT , 
+		    D.ENDDE ,
+            ( CASE 
+				WHEN D.ENDDE = '99991231' THEN '영구' 
+                ELSE DATE_FORMAT(D.ENDDE , "%Y-%m-%d") 
+			END ) AS ENDDE_FORMAT , 
+		    D.USE_AT ,
+            (CASE WHEN D.USE_AT = 'Y' THEN '사용' ELSE '미사용' END) AS USE_AT_NM 
 		    
 		FROM TB_MY_DAEMON D
 		WHERE (@rownum:=0)=0
 		ORDER BY D.DAEMON_ID 
 	</select>
-	
 	
 </mapper>

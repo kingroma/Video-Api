@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC  
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="tilesbase" template="/WEB-INF/views/common/layout/layout.jsp">
+		<put-attribute name="header"   value="/layout/header.do" />
+		<put-attribute name="topMenu"  value="/layout/topMenu.do" />
+		<put-attribute name="leftMenu" value="" />
+		<put-attribute name="body" 		  value="" />
+		<put-attribute name="footer"   value="/layout/footer.do" />
+	</definition>
+	
+	<definition name="popupbase" template="/WEB-INF/views/common/layout/popupLayout.jsp">
+		<put-attribute name="body" value="" />
+	</definition>
+	
+	<definition name="piecebase" template="/WEB-INF/views/common/layout/pieceLayout.jsp">
+		<put-attribute name="body" value="" />
+	</definition>
+	
+	<definition name="dashboardbase" template="/WEB-INF/views/common/layout/dashBoardLayout.jsp">
+		<put-attribute name="body" value="" />
+	</definition>
+	
+	<definition name="tilesmain/**" extends="tilesbase" >
+		<put-attribute name="header"   value="/layout/header.do" />
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+ 
+	<definition name="tilessub/**" extends="tilesbase">
+		<put-attribute name="leftMenu" value="/layout/leftMenu.do" />
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+	
+	<definition name="tilespopup/**" extends="popupbase">
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+ 
+ 	<definition name="tilespiece/**" extends="piecebase">
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+ 
+ 	<!-- <definition name="tilesdash/**" extends="dashboardbase">
+		<put-attribute name="header"   value="/WEB-INF/views/common/layout/dashHeader.jsp" />
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition> -->
+</tiles-definitions>

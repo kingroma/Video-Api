@@ -29,9 +29,10 @@ public class TestController extends GenericController<TestVO,TestService>{
 	protected TestController() {
 		super(TestVO.class,TestService.class);
 	}
+	
 	// 배치 실행
 	public void execute(MyDaemonVO vo) throws Exception {
-		logger.info("start execute" + vo.getDaemonId());
+		logger.info("Start execute" + vo.getDaemonId());
 	}
 
 }

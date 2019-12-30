@@ -18,6 +18,9 @@ public class MyInterceptor implements HandlerInterceptor {
 		return true;
 	}
 
+	/**
+	 * Tiles 때문에 여러번 불림 참고 
+	 * */
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView mav) throws Exception {
 		String url = request.getRequestURI();

@@ -14,6 +14,12 @@ public class GenericCode {
 	public static final int REGIST_REDIRECT = 31;			// 등록화면 리다이렉트 
 	public static final int MODIFY_REDIRECT = 32;			// 수정화면 리다이렉트 
 	
+	public static final String TILES_SUB	= "tilessub";	// 서브 tiles 
+	public static final String TILES_MAIN 	= "tilesmain";	// 메인 tiles 
+	public static final String TILES_POPUP 	= "tilespopup";	// 팝업 tiles 
+	public static final String TILES_PIECE 	= "tilespiece";	// 조각 tiles(header/footer없이 원본 그대로) 
+	public static final String TILES_DASH 	= "tilesdash";	// 대시보드 tiles 
+	
 	// 처리 결과
 	public static final String VALIDATE = "V";				// 밸리데이션 체크 실패
 	public static final String SUCCESS  = "S";				// 성공 

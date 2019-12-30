@@ -464,7 +464,6 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	
-	
 	/** HP Fortify 처리 : model.addAttribute(getNameVO(), entity);   model.addAttribute("ivo", entity);  대처  */
 	public ModelMap setModelEntity(ModelMap model, T entity, String attributeName) throws Exception {
 		String attrNm = (attributeName == null || "".equals(attributeName))?getNameVO():attributeName;
@@ -555,8 +554,10 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	private String getFilePathStr(Object objPath) {
 		String resultPath = StringUtil.isString(objPath);
 		
-		if("".equals(resultPath)){
-			resultPath = StringUtil.isString(this.urlBase);
+		if("".equals(resultPath)){			
+			resultPath = StringUtil.isString(GenericCode.TILES_SUB+this.urlBase);
+		}else{
+			resultPath = GenericCode.TILES_SUB+resultPath;
 		}
 		return resultPath;		 
 	}

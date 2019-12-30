@@ -16,11 +16,19 @@ public class MyDaemonVO extends CommonVO{
 	
 	private String intervalAt = ""; // Y N
 	
+	private String intervalAtNm = "";
+	
 	private String minute = ""; 
+	
+	private String minuteEveryDayTime = "";
 	
 	private String bgnde = ""; // YYYYMMDD
 	
+	private String bgndeFormat = ""; // YYYYMMDD
+	
 	private String endde = ""; // YYYYMMDD
+	
+	private String enddeFormat = "";
 
 	public String getDaemonId() {
 		return daemonId;
@@ -84,6 +92,38 @@ public class MyDaemonVO extends CommonVO{
 
 	public void setEndde(String endde) {
 		this.endde = endde;
+	}
+
+	public String getIntervalAtNm() {
+		return intervalAtNm;
+	}
+
+	public void setIntervalAtNm(String intervalAtNm) {
+		this.intervalAtNm = intervalAtNm;
+	}
+
+	public String getMinuteEveryDayTime() {
+		return minuteEveryDayTime;
+	}
+
+	public void setMinuteEveryDayTime(String minuteEveryDayTime) {
+		this.minuteEveryDayTime = minuteEveryDayTime;
+	}
+
+	public String getBgndeFormat() {
+		return bgndeFormat;
+	}
+
+	public void setBgndeFormat(String bgndeFormat) {
+		this.bgndeFormat = bgndeFormat;
+	}
+
+	public String getEnddeFormat() {
+		return enddeFormat;
+	}
+
+	public void setEnddeFormat(String enddeFormat) {
+		this.enddeFormat = enddeFormat;
 	}
 
 	

@@ -23,8 +23,8 @@ import com.mydefault.app.common.quartz.web.Quartz;
 import com.mydefault.app.generic.web.GenericController;
 
 @Controller
-@RequestMapping("/common/daemon/*")
-public class MyDaemonController extends GenericController<MyDaemonVO,MyDaemonService> { // implements ApplicationContextAware, InitializingBean, DisposableBean{
+@RequestMapping("/common/mydaemon/*")
+public class MyDaemonController extends GenericController<MyDaemonVO,MyDaemonService> { 
 	
 	protected static final Logger logger = LoggerFactory.getLogger(MyDaemonController.class);
 	
@@ -58,7 +58,6 @@ public class MyDaemonController extends GenericController<MyDaemonVO,MyDaemonSer
 			e.printStackTrace();
 		}
 	}
-	
 	
 	private void daemonRunner() {
 		for ( MyDaemonWorker mdw : daemonList ) {
