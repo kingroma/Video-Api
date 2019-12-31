@@ -12,4 +12,6 @@ public interface GenericMapper<T> {
 	public int update(T entity) throws Exception;
 	
 	public int delete(Object entity) throws Exception; 
+	
+	public int duplPk(T entity) throws Exception;
 }

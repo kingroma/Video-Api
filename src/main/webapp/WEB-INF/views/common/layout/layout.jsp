@@ -2,10 +2,10 @@
 <%@ taglib prefix="tiles"  uri="http://tiles.apache.org/tags-tiles"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"%>
 
-<!-- https://startbootstrap.com/previews/sb-admin-2/ -->
-<!-- https://www.w3schools.com/bootstrap/ -->
 <!DOCTYPE html>
 <html lang="ko">
+<!-- https://startbootstrap.com/previews/sb-admin-2/ -->
+<!-- https://www.w3schools.com/bootstrap/ -->
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -24,7 +24,12 @@
 	<script src="<c:url value='/resources/vendor/bootstrap/js/bootstrap.bundle.min.js'/>"></script>
 	<script src="<c:url value='/resources/vendor/jquery-easing/jquery.easing.min.js'/>"></script>
 	
+	<script type="text/javascript"> var contextPath = "<c:url value='/' />";</script>
+	<script src="<c:url value='/resources/js/common.js'/>"></script>
 	
+	<!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 <body id="page-top">
 	<div id="wrapper">

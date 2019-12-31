@@ -463,6 +463,22 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		return new ModelAndView("jsonView", model);
 	}
 	
+	@RequestMapping("/ajaxDuplPk.do")
+	public ModelAndView ajaxDuplPk(T entity, HttpServletRequest request,  ModelMap model) throws Exception {
+		String resultCd = GenericCode.FAILURE;
+		try {
+			int duplchk = service.duplPk(entity);
+			if(duplchk == 0){
+				resultCd =  GenericCode.SUCCESS;
+			} else {
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		model.addAttribute(GenericCode.RESULT_CD, resultCd);
+		return new ModelAndView("jsonView", model);
+	}
 	
 	/** HP Fortify 처리 : model.addAttribute(getNameVO(), entity);   model.addAttribute("ivo", entity);  대처  */
 	public ModelMap setModelEntity(ModelMap model, T entity, String attributeName) throws Exception {

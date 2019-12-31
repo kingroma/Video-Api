@@ -1,5 +1,7 @@
 package com.mydefault.app.common.dashboard.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,6 +19,7 @@ import com.mydefault.app.common.dashboard.service.DashboardVO;
 import com.mydefault.app.common.mydaemon.service.MyDaemonService;
 import com.mydefault.app.common.mydaemon.service.MyDaemonVO;
 import com.mydefault.app.common.util.GenericCode;
+import com.mydefault.app.common.util.MyMap;
 import com.mydefault.app.common.util.StringUtil;
 import com.mydefault.app.generic.web.GenericController;
 
@@ -64,6 +67,17 @@ public class DashboardController extends GenericController<DashboardVO,Dashboard
 			
 			model.addAttribute("intervalCount",intervalCount);
 			model.addAttribute("everydayCount",everydayCount);
+			
+			
+			MyMap monthMap = myDaemonService.dashboardMonth();
+			MyMap sixMonthMap = myDaemonService.dashboardSixMonth();
+			
+			model.addAttribute("monthMap",monthMap);
+			model.addAttribute("sixMonthMap",sixMonthMap);
+			
+			SimpleDateFormat sdfMM = new SimpleDateFormat("MM"); 
+			model.addAttribute("mm",sdfMM.format(new Date()));
+			
 		} catch (Exception e) {
 			 StringUtil.exceptionMsg(this.getClass(), e);
 		}

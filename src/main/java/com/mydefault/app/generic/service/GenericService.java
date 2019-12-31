@@ -19,4 +19,6 @@ public interface GenericService<T, M extends GenericMapper<T>> {
 	public int delete(T entity, HttpServletRequest request) throws Exception;
 	
 	public int delete(Object entity) throws Exception;
+	
+	public int duplPk(T entity) throws Exception;
 }

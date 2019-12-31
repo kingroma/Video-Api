@@ -4,7 +4,7 @@ import com.mydefault.app.common.util.CommonVO;
 
 public class MyDaemonVO extends CommonVO{
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	private String daemonId = "";
 	
@@ -30,6 +30,16 @@ public class MyDaemonVO extends CommonVO{
 	
 	private String enddeFormat = "";
 
+	private String useAt = "";
+	
+	private String delAt = "";
+	
+	private String sortSn = "";
+	
+	private String succAt = "";
+	
+	private String message = "";
+	
 	public String getDaemonId() {
 		return daemonId;
 	}
@@ -126,6 +136,44 @@ public class MyDaemonVO extends CommonVO{
 		this.enddeFormat = enddeFormat;
 	}
 
-	
+	public String getUseAt() {
+		return useAt;
+	}
+
+	public void setUseAt(String useAt) {
+		this.useAt = useAt;
+	}
+
+	public String getDelAt() {
+		return delAt;
+	}
+
+	public void setDelAt(String delAt) {
+		this.delAt = delAt;
+	}
+
+	public String getSortSn() {
+		return sortSn;
+	}
+
+	public void setSortSn(String sortSn) {
+		this.sortSn = sortSn;
+	}
+
+	public String getSuccAt() {
+		return succAt;
+	}
+
+	public void setSuccAt(String succAt) {
+		this.succAt = succAt;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	
 }

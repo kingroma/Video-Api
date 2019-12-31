@@ -67,4 +67,8 @@ public class GenericServiceImpl<T, M extends GenericMapper<T>> implements Generi
 		return mapper.delete(entity);
 	}
 	
+	@Override
+	public int duplPk(T entity) throws Exception{
+		return mapper.duplPk(entity);
+	}
 }

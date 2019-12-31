@@ -26,8 +26,10 @@ import org.apache.ibatis.session.ResultHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Intercepts({ @Signature(type = StatementHandler.class, method = "update", args = { Statement.class }),
-@Signature(type = StatementHandler.class, method = "query", args = { Statement.class, ResultHandler.class }) })
+@Intercepts({ 
+	@Signature(type = StatementHandler.class, method = "update", args = { Statement.class }),
+	@Signature(type = StatementHandler.class, method = "query", args = { Statement.class, ResultHandler.class }) 
+	})
 public class MyBatisLogger implements Interceptor {
 
 	private static Logger sqlLog = LoggerFactory.getLogger(MyBatisLogger.class);

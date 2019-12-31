@@ -3,11 +3,16 @@ package com.mydefault.app.common.mydaemon.web;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.Resource;
+
 import org.springframework.context.ApplicationContext;
 
+import com.mydefault.app.common.mydaemon.service.MyDaemonService;
 import com.mydefault.app.common.mydaemon.service.MyDaemonVO;
 
 public class MyDaemonWorker extends Thread{
+	public MyDaemonService myDaemonService;
+	
 	private MyDaemonVO vo = null ; 
 	
 	private MyDaemonExecutor myDaemonExecutor = null ; 
@@ -26,11 +31,25 @@ public class MyDaemonWorker extends Thread{
 	
 	private long oneDay = 24 * 60 * 60 * sToMs ; 
 	
-	private SimpleDateFormat sdf = null ; 
+	private int bgndeInt = -1 ;
 	
-	public MyDaemonWorker ( MyDaemonVO vo , ApplicationContext applicationContext ) { 
+	private int enddeInt = -1 ;
+	
+	private SimpleDateFormat sdfyyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmm");
+	private SimpleDateFormat sdfHHmm = new SimpleDateFormat("HHmm");
+	private SimpleDateFormat sdfyyyyMMdd = new SimpleDateFormat("yyyyMMdd");
+	
+	public MyDaemonWorker ( MyDaemonVO vo , ApplicationContext applicationContext , MyDaemonService myDaemonService ) { 
 		this.vo = vo ; 
 		this.myDaemonExecutor = new MyDaemonExecutor(vo,applicationContext);
+		this.myDaemonService = myDaemonService ;
+		
+		try {
+			bgndeInt = Integer.parseInt(vo.getBgnde());
+			enddeInt = Integer.parseInt(vo.getEndde());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -40,10 +59,10 @@ public class MyDaemonWorker extends Thread{
 			intervalAt = vo.getIntervalAt() ;
 			minute = Long.parseLong(vo.getMinute()) ;
 			
-			if ( "Y".equalsIgnoreCase(intervalAt) ) {
+			if ( "Y".equalsIgnoreCase(intervalAt) && minute > 0 ) {
 				interverWorker();
 			}
-			else {
+			else if ( "N".equalsIgnoreCase(intervalAt) && minute > 0) {
 				everydayWorker();
 			}
 		}
@@ -55,13 +74,20 @@ public class MyDaemonWorker extends Thread{
 			try {
 				Date current = new Date();
 				
-				if ( lastWork.getTime() + ( minute * minToSec * sToMs ) <= current.getTime() ) {
+				if ( lastWork.getTime() + ( minute * minToSec * sToMs ) <= current.getTime() ) { 
 					lastWork = current ;
-					try {
-						myDaemonExecutor.run();
-					} catch (Exception e) {
-						e.printStackTrace();
+					if (canWork(current)){
+						try {
+							myDaemonExecutor.run();
+							insertLog("Y","");
+						} catch (Exception e) {
+							insertLog("Y",e.getMessage());
+							e.printStackTrace();
+						}
+					}else {
+						runnable = false; 
 					}
+					
 				}
 				
 				// 1 Sec Interval
@@ -76,7 +102,6 @@ public class MyDaemonWorker extends Thread{
 	private void everydayWorker() {
 		try {
 			lastWork = firstDoDate ( minute ) ; 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -87,10 +112,16 @@ public class MyDaemonWorker extends Thread{
 				
 				if ( lastWork.getTime() <= current.getTime() ) {
 					lastWork = new Date ( lastWork.getTime()  + oneDay );
-					try {
-						myDaemonExecutor.run();
-					} catch (Exception e) {
-						e.printStackTrace();
+					if (canWork(current)){
+						try {
+							myDaemonExecutor.run();
+							insertLog("Y","");
+						} catch (Exception e) {
+							insertLog("N",e.getMessage());
+							e.printStackTrace();
+						}
+					}else {
+						runnable = false;
 					}
 				}
 				
@@ -102,15 +133,27 @@ public class MyDaemonWorker extends Thread{
 		}
 	}
 	
-	private static Date firstDoDate(long minute){
+	private boolean canWork(Date current){
+		boolean ret = false ;
+		
+		try {
+			int c = Integer.parseInt(sdfyyyyMMdd.format(current));
+			
+			if ( bgndeInt <= c && c <= enddeInt ){
+				ret = true ;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ret ; 
+	}
+	
+	private Date firstDoDate(long minute){
 		Date current = new Date();
 		
-		SimpleDateFormat sdfyyyyMMddHHmmss = new SimpleDateFormat("yyyyMMddHHmm");
-		SimpleDateFormat sdfHHmm = new SimpleDateFormat("HHmm");
-		SimpleDateFormat sdfyyyyMMdd = new SimpleDateFormat("yyyyMMdd");
-		
-		long hour = minute / 3600 ;
-		long min = minute % 3600 / 60 ; 
+		long hour = minute / 60 ;
+		long min = minute % 60  ; 
 		
 		String h = ( hour > 10 ? "" + hour : "0" + hour ); 
 		String m = ( min > 10 ? "" + min : "0" + min );  
@@ -131,6 +174,16 @@ public class MyDaemonWorker extends Thread{
 		return ret ; 
 	}
 
+	private void insertLog(String succAt, String message){
+		try {
+			vo.setSuccAt(succAt);
+			vo.setMessage(message);
+			myDaemonService.insertBatchLog(vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean isRunnable() {
 		return runnable;
 	}
@@ -138,4 +191,14 @@ public class MyDaemonWorker extends Thread{
 	public void setRunnable(boolean runnable) {
 		this.runnable = runnable;
 	}
+
+	public MyDaemonVO getVo() {
+		return vo;
+	}
+
+	public void setVo(MyDaemonVO vo) {
+		this.vo = vo;
+	}
+	
+	
 }

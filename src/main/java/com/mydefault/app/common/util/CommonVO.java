@@ -11,6 +11,8 @@ public class CommonVO implements Serializable {
 	
 	private String rownum = ""; 
 	
+	private String resultAck = "";
+	
 	public String getUseAt() {
 		return useAt;
 	}
@@ -33,6 +35,14 @@ public class CommonVO implements Serializable {
 
 	public void setUseAtNm(String useAtNm) {
 		this.useAtNm = useAtNm;
+	}
+
+	public String getResultAck() {
+		return resultAck;
+	}
+
+	public void setResultAck(String resultAck) {
+		this.resultAck = resultAck;
 	}
 	
 	
