@@ -89,6 +89,9 @@ public class MyDaemonVO extends CommonVO{
 	}
 
 	public String getBgnde() {
+		if (bgnde != null && !bgnde.isEmpty()){
+			bgnde = bgnde.replaceAll("-", "");
+		}
 		return bgnde;
 	}
 
@@ -97,6 +100,9 @@ public class MyDaemonVO extends CommonVO{
 	}
 
 	public String getEndde() {
+		if (endde != null && !endde.isEmpty()){
+			endde = endde.replaceAll("-", "");
+		}
 		return endde;
 	}
 

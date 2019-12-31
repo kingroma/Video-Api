@@ -259,4 +259,11 @@
 				
 			DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 MONTH)  , '%M') AS M6 
 	</select>
+	
+	<update id='delete'>
+		UPDATE TB_MY_DAEMON SET
+			 
+			DEL_AT = 'Y'
+		WHERE DAEMON_ID = #{daemonId}
+	</update>
 </mapper>

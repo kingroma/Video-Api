@@ -7,18 +7,9 @@ public class Test {
 
 	public static void main(String[] args) {
 		try {
-			Date current = new Date();
+			String str = "2019-11-11";
 			
-			long minute = 19 * 3600 + 39 * 60 ;
-			
-			long hour = minute / 3600 ; 
-			
-			long min = minute % 3600 / 60 ; 
-			
-			System.out.println(minute);
-			System.out.println(hour);
-			System.out.println(min);
-			
+			System.out.println(str.replaceAll("-", ""));
 			// System.out.println(firstDoDate(minute));
 			
 		} catch (Exception e) {

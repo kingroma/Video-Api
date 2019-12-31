@@ -125,6 +125,24 @@ public class MyDaemonController extends GenericController<MyDaemonVO,MyDaemonSer
 		return CommonUtil.getRedirectView(viewMapper(GenericCode.MODIFY_REDIRECT));
 	}
 	
+	@RequestMapping("/delete.do")
+	public ModelAndView delete(@ModelAttribute MyDaemonVO entity, HttpServletRequest request, ModelMap model, RedirectAttributes ra) throws Exception {	
+		String resultCd = GenericCode.FAILURE;
+		String message  = myMessageSource.getMessage("common.msg.delete.fail");
+
+		try {	
+			service.delete(entity, request);	
+			resultCd = GenericCode.SUCCESS;
+			workerDeleteAdd(entity);
+			message = myMessageSource.getMessage("common.msg.delete.success");
+		} catch (Exception e) {
+			message = StringUtil.getExceptionMsg(this.getClass(), e, message);
+		}
+		ra.addFlashAttribute(GenericCode.RESULT_CD, resultCd); 
+		ra.addFlashAttribute(GenericCode.MESSAGE, message);
+		return CommonUtil.getRedirectView(viewMapper(GenericCode.LIST_REDIRECT));
+	}
+	
 	private void workerDeleteAdd(MyDaemonVO myDaemonVO){
 		if ( myDaemonVO != null ){
 			int where = -1 ;
@@ -146,7 +164,7 @@ public class MyDaemonController extends GenericController<MyDaemonVO,MyDaemonSer
 				daemonList.remove(where);
 			}
 			
-			if ( "Y".equalsIgnoreCase(myDaemonVO.getUseAt()) ) {
+			if ( "Y".equalsIgnoreCase(myDaemonVO.getUseAt()) && "N".equalsIgnoreCase(myDaemonVO.getDelAt()) ) {
 				MyDaemonWorker newMyDaemonWork = new MyDaemonWorker(myDaemonVO,this.applicationContext, service);
 				daemonList.add(newMyDaemonWork);
 				newMyDaemonWork.start();

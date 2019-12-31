@@ -58,8 +58,16 @@
 				            <th class='text-center' style='vertical-align:top'><div>사용 여부</div></th>
 				            <td>
 				            	<select id='useAt' name='useAt' class='form-control form-control-user'>
-				            		<option value='Y'>사용</option>
-				            		<option value='N'>미사용</option>
+				            		<option value='Y'
+				            			<c:if test='${myDaemonVO.useAt == "Y" }'>
+				            				selected="selected" 
+				            			</c:if>
+				            			>사용</option>
+				            		<option value='N'
+				            			<c:if test='${myDaemonVO.useAt == "N" }'>
+				            				selected="selected" 
+				            			</c:if>
+				            			>미사용</option>
 				            	</select>
 				            </td>
 	         			</tr>
@@ -200,7 +208,11 @@
 	}
 	
 	function fn_delete(){
+		$('#delAt').val('Y');
+		$('#useAt').val('N');
+		var msg = 'do you want to delete ? ';
 		
+		goAction('/common/mydaemon/delete.do'); 
 	}
 	
 	function fn_save(){
