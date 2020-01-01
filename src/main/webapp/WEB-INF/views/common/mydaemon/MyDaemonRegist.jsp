@@ -217,25 +217,45 @@
 	function fn_delete(){
 		$('#delAt').val('Y');
 		$('#useAt').val('N');
-		var msg = 'do you want to delete ? ';
+		var msg = '삭제 ? ';
 		
-		goAction('/common/mydaemon/delete.do'); 
+		if (confirm(msg)) {
+			goAction('/common/mydaemon/delete.do'); 
+		}
 	}
 	
 	function fn_save(){
 		$('#delAt').val('N');
-		var msg = 'do you want to save ? ';
+		var msg = '저장 ? ';
 		
 		var registFlag = "${registFlag}";
 		
-		/* if (confirm(msg)) { */
+		if ( !fn_vaild() ) {
+			return ;
+		}
+		
+		if (confirm(msg)) {
 			if ( "insert" == registFlag ){
 				goAction('/common/mydaemon/insert.do'); 
 			}else{
 				goAction('/common/mydaemon/update.do'); 
 			}
-        /* } */
+        } 
 	}
 	
+	function fn_vaild(){
+		var ret = true ;  
+		var arr = ['daemonNm','useAt','controllerNm','bgnde','endde','minute','intervalAt'];
+		
+		for ( var i = 0 ; i < arr.length ; i ++ ) {
+			if ( $('#'+arr[i]).val() == undefined || $('#'+arr[i]).val() == '' ){
+				alert(arr[i]+' is empty');
+				ret = false ;
+				break;
+			}
+		}
+			
+		return ret ; 
+	}
 </script>
 

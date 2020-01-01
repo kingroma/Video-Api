@@ -56,5 +56,17 @@
 	
 	
 	<script src="<c:url value='/resources/js/sb-admin-2.min.js'/>"></script>
+	
+	<script>
+		$(document).ready(function(){
+			var resultCd = '<c:out value="${resultCd}"/>';
+			if ( resultCd == 'S'  ){
+				alert('succ ');
+			}else if ( resultCd == 'F' ){
+				alert('fail ');
+			}
+		});
+	</script>
+});
 </body>
 </html>
