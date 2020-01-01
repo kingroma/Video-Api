@@ -30,6 +30,8 @@ public class MyDaemonVO extends CommonVO{
 	
 	private String enddeFormat = "";
 
+	private String daemonParam = "";
+	
 	private String useAt = "";
 	
 	private String delAt = "";
@@ -210,6 +212,14 @@ public class MyDaemonVO extends CommonVO{
 
 	public void setSrchSuccAt(String srchSuccAt) {
 		this.srchSuccAt = srchSuccAt;
+	}
+
+	public String getDaemonParam() {
+		return daemonParam;
+	}
+
+	public void setDaemonParam(String daemonParam) {
+		this.daemonParam = daemonParam;
 	}
 	
 }

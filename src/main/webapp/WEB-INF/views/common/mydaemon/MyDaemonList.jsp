@@ -20,7 +20,7 @@
 	  	</div>
 	  	<div class="card-body">
 	    	<div class="table-responsive">
-	      		<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+	      		<table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
 	      			<colgroup>
 	      				<col width='5%'/>
 	      				<col width='20%'/>
@@ -45,7 +45,7 @@
 	       			</thead>
 	       			<tbody>
 	         			<c:forEach items="${list }" var="r" varStatus="s">
-	         				<tr onclick='goModify("<c:out value="${r.daemonId }"/>")'>
+	         				<tr onclick='goModify("<c:out value="${r.daemonId }"/>")' style='cursor:pointer'>
 	         					<td><c:out value="${r.rownum }"/></td>
 	         					<td>[<c:out value="${r.daemonId }"/>]<c:out value="${r.daemonNm }"/></td>
 	         					<td><c:out value="${r.controllerNm }"/></td>

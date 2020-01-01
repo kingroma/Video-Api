@@ -41,7 +41,7 @@ public class MyDaemonWorker extends Thread{
 	
 	public MyDaemonWorker ( MyDaemonVO vo , ApplicationContext applicationContext , MyDaemonService myDaemonService ) { 
 		this.vo = vo ; 
-		this.myDaemonExecutor = new MyDaemonExecutor(vo,applicationContext);
+		this.myDaemonExecutor = new MyDaemonExecutor(vo, applicationContext, myDaemonService);
 		this.myDaemonService = myDaemonService ;
 		
 		try {
@@ -79,9 +79,7 @@ public class MyDaemonWorker extends Thread{
 					if (canWork(current)){
 						try {
 							myDaemonExecutor.run();
-							insertLog("Y","");
 						} catch (Exception e) {
-							insertLog("Y",e.getMessage());
 							e.printStackTrace();
 						}
 					}else {
@@ -115,9 +113,7 @@ public class MyDaemonWorker extends Thread{
 					if (canWork(current)){
 						try {
 							myDaemonExecutor.run();
-							insertLog("Y","");
 						} catch (Exception e) {
-							insertLog("N",e.getMessage());
 							e.printStackTrace();
 						}
 					}else {
@@ -172,16 +168,6 @@ public class MyDaemonWorker extends Thread{
 			e.printStackTrace();
 		}
 		return ret ; 
-	}
-
-	private void insertLog(String succAt, String message){
-		try {
-			vo.setSuccAt(succAt);
-			vo.setMessage(message);
-			myDaemonService.insertBatchLog(vo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public boolean isRunnable() {

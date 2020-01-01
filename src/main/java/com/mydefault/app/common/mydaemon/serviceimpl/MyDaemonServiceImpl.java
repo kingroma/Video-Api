@@ -20,15 +20,7 @@ public class MyDaemonServiceImpl extends GenericServiceImpl<MyDaemonVO,MyDaemonM
 
 	@Override
 	public MyDaemonVO insert(MyDaemonVO entity, HttpServletRequest request) throws Exception {
-		System.out.println(entity.getDaemonNm());
-		System.out.println(entity.getControllerNm());
-		System.out.println(entity.getIntervalAt());
-		System.out.println(entity.getMinute());
-		System.out.println(entity.getBgnde()); 
-		System.out.println(entity.getEndde());
-		System.out.println(entity.getUseAt());
 		mapper.insert(entity);
-		System.out.println(entity.getDaemonId());
 		return entity;
 	}
 	

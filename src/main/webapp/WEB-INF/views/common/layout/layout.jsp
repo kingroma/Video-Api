@@ -26,6 +26,7 @@
 	
 	<script type="text/javascript"> var contextPath = "<c:url value='/' />";</script>
 	<script src="<c:url value='/resources/js/common.js'/>"></script>
+	<script src="<c:url value='/resources/js/autosize.min.js'/>"></script>
 	
 	<!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>

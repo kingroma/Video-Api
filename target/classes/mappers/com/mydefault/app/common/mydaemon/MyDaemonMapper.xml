@@ -40,6 +40,7 @@
 		    D.DAEMON_NM , 
 		    D.DAEMON_TEXT , 
 		    D.CONTROLLER_NM , 
+		    D.DAEMON_PARAM ,
 		    D.INTERVAL_AT , 
 		    ( CASE WHEN D.INTERVAL_AT = 'Y' THEN '반복' ELSE '일회' END  ) AS INTERVAL_AT_NM , 
 		    D.MINUTE , 
@@ -73,11 +74,13 @@
 			DAEMON_NM , 
 			DAEMON_TEXT , 
 			CONTROLLER_NM , 
+			DAEMON_PARAM ,
+			
 			INTERVAL_AT ,
-			 
 			MINUTE , 
 			BGNDE , 
 			ENDDE , 
+			
 			USE_AT ,
 			DEL_AT 
 		) VALUES (
@@ -85,11 +88,13 @@
 			#{daemonNm} , 
 			IFNULL(#{daemonText} ,''), 
 			#{controllerNm} , 
+			#{daemonParam} ,
+			
 			#{intervalAt} ,
-			 
 			#{minute} , 
 			REPLACE(#{bgnde} ,'-','') , 
 			REPLACE(#{endde} ,'-','') , 
+			
 			#{useAt} ,
 			#{delAt}
 		)
@@ -99,12 +104,14 @@
 		UPDATE TB_MY_DAEMON SET
 			DAEMON_NM = #{daemonNm} , 
 			DAEMON_TEXT = IFNULL(#{daemonText} ,'') , 
-			CONTROLLER_NM = #{controllerNm} , 
+			CONTROLLER_NM = #{controllerNm} ,
+			DAEMON_PARAM = #{daemonParam} ,  
 			INTERVAL_AT = #{intervalAt} ,
 			
 			MINUTE = #{minute} , 
 			BGNDE = REPLACE(#{bgnde} ,'-','') , 
 			ENDDE = REPLACE(#{endde} ,'-','') , 
+			
 			USE_AT = #{useAt} , 
 			DEL_AT = #{delAt}
 		WHERE DAEMON_ID = #{daemonId}
@@ -129,7 +136,7 @@
 			#{sortSn} , 
 			NOW() , 
 			#{succAt} , 
-			#{message}
+			IFNULL(#{message},'')
 		)
 	</insert>
 	
