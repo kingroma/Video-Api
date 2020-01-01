@@ -29,13 +29,21 @@
 	<hr class="sidebar-divider">
 
 	<!-- Heading -->
-	<div class="sidebar-heading">Hello World</div>
+	<div class="sidebar-heading">Daemon</div>
 
 	<!-- Nav Item - Tables -->
 	<li class="nav-item">
 		<a class="nav-link" href="<c:url value='/common/mydaemon/list.do'/>"> 
 			<i class="fas fa-fw fa-table"></i> 
 			<span>Daemon</span>
+		</a>
+	</li>
+	
+	<!-- Nav Item - Tables -->
+	<li class="nav-item">
+		<a class="nav-link" href="<c:url value='/common/mydaemonlog/list.do'/>"> 
+			<i class="fas fa-fw fa-table"></i> 
+			<span>Daemon Log</span>
 		</a>
 	</li>
 

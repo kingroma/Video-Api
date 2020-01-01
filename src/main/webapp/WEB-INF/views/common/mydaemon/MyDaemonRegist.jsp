@@ -13,7 +13,7 @@
 	<form:hidden path="delAt" />
 	
 	<div class="d-flex align-items-center mb-4">
-		<h1 class="h3 mb-0 text-gray-800 mr-auto">My Daemon</h1>
+		<h1 class="h3 mb-0 text-gray-800 mr-auto">Daemon</h1>
 		
 		<a href="javascript:goAction('/common/mydaemon/list.do')" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm border">
 			Go Back

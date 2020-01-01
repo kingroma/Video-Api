@@ -13,6 +13,10 @@ public class CommonVO implements Serializable {
 	
 	private String resultAck = "";
 	
+	private String srchBgnde = "";
+	
+	private String srchEndde = "";
+	
 	public String getUseAt() {
 		return useAt;
 	}
@@ -44,6 +48,21 @@ public class CommonVO implements Serializable {
 	public void setResultAck(String resultAck) {
 		this.resultAck = resultAck;
 	}
-	
+
+	public String getSrchBgnde() {
+		return srchBgnde;
+	}
+
+	public void setSrchBgnde(String srchBgnde) {
+		this.srchBgnde = srchBgnde;
+	}
+
+	public String getSrchEndde() {
+		return srchEndde;
+	}
+
+	public void setSrchEndde(String srchEndde) {
+		this.srchEndde = srchEndde;
+	}
 	
 }

@@ -40,6 +40,12 @@ public class MyDaemonVO extends CommonVO{
 	
 	private String message = "";
 	
+	private String srchBgnde = "";
+	
+	private String srchEndde = "";
+	
+	private String srchSuccAt = "";
+	
 	public String getDaemonId() {
 		return daemonId;
 	}
@@ -180,6 +186,30 @@ public class MyDaemonVO extends CommonVO{
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	public String getSrchBgnde() {
+		return srchBgnde;
+	}
+
+	public void setSrchBgnde(String srchBgnde) {
+		this.srchBgnde = srchBgnde;
+	}
+
+	public String getSrchEndde() {
+		return srchEndde;
+	}
+
+	public void setSrchEndde(String srchEndde) {
+		this.srchEndde = srchEndde;
+	}
+
+	public String getSrchSuccAt() {
+		return srchSuccAt;
+	}
+
+	public void setSrchSuccAt(String srchSuccAt) {
+		this.srchSuccAt = srchSuccAt;
 	}
 	
 }
