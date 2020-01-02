@@ -42,7 +42,7 @@
 	<!-- Nav Item - Tables -->
 	<li class="nav-item">
 		<a class="nav-link" href="<c:url value='/common/mydaemonlog/list.do'/>"> 
-			<i class="fas fa-fw fa-table"></i> 
+			<i class="fas fa-fw fa-eye"></i> 
 			<span>Daemon Log</span>
 		</a>
 	</li>

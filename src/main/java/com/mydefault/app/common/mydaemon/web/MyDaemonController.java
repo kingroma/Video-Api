@@ -1,29 +1,26 @@
 package com.mydefault.app.common.mydaemon.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mydefault.app.common.mydaemon.service.MyDaemonService;
 import com.mydefault.app.common.mydaemon.service.MyDaemonVO;
-import com.mydefault.app.common.quartz.web.Quartz;
 import com.mydefault.app.common.util.CommonUtil;
 import com.mydefault.app.common.util.GenericCode;
 import com.mydefault.app.common.util.StringUtil;
@@ -36,7 +33,7 @@ public class MyDaemonController extends GenericController<MyDaemonVO,MyDaemonSer
 	
 	protected static final Logger logger = LoggerFactory.getLogger(MyDaemonController.class);
 	
-	private List<MyDaemonWorker> daemonList = null ; 
+	public static List<MyDaemonWorker> daemonList = null ; 
 	
 	protected MyDaemonController() {
 		super(MyDaemonVO.class,MyDaemonService.class);
@@ -75,6 +72,50 @@ public class MyDaemonController extends GenericController<MyDaemonVO,MyDaemonSer
 		}
 	}
 
+	/**
+	 * SUCC_AT = #{succAt} ,
+				MESSAGE = #{message} 
+		WHERE DAEMON_ID = #{daemonId} AND SORT_SN = #{sortSn}
+	 * */
+	@RequestMapping("/end.do")
+	public ModelAndView ajaxEnd(HttpServletRequest request, 
+			@RequestParam String daemonId , 
+			@RequestParam String sortSn , 
+			@RequestParam String succAt , 
+			@RequestParam String message 
+		) throws Exception {
+		
+		Map<String,String> ret = new HashMap<String,String>();
+		ret.put("result", "OK");
+		try {
+			if ( daemonId != null && !daemonId.isEmpty() && sortSn != null && !sortSn.isEmpty() && 
+					succAt != null && !succAt.isEmpty() && message != null 
+				) {
+				MyDaemonVO myDaemonVO = new MyDaemonVO();
+				myDaemonVO.setDaemonId(daemonId.toUpperCase());
+				myDaemonVO.setSortSn(sortSn);
+				myDaemonVO.setSuccAt(succAt.toUpperCase());
+				myDaemonVO.setMessage(message);
+				
+				for ( MyDaemonWorker mdw : daemonList ) {
+					if ( daemonId.equalsIgnoreCase(mdw.getVo().getDaemonId()) ) {
+						mdw.setFinish(true);
+						
+						service.updateBatchLog(myDaemonVO);
+						break;
+					}
+				}
+			}else {
+				ret.put("result", "NO");
+			}
+				
+			
+		} catch (Exception e) {
+			StringUtil.exceptionMsg(this.getClass(), e);
+		}
+		return new ModelAndView("jsonView", ret);
+	}
+	
 	@RequestMapping("/insert.do") 
 	public ModelAndView insert(@ModelAttribute MyDaemonVO entity, BindingResult bindingResult, HttpServletRequest request, ModelMap model, RedirectAttributes ra) throws Exception {
 		String resultCd = GenericCode.FAILURE;

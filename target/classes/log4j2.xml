@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <Configuration> 
 	<Properties>
-		<Property name="fileLogPath">C:\\Users\\kingrome\\git\\WebDefault\\logs</Property>
+		<Property name="fileLogPath">C:\\Users\\admin\\git-my-default\\WebDefault\\logs</Property>
 		<Property name="fileLogName">mydefault</Property>
 		<Property name="fileLogPattern">
 			%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5.5p | %l - %m%n
@@ -22,8 +22,9 @@
 				<SizeBasedTriggeringPolicy size="10MB" />
 			</Policies>
 		</RollingFile>
+		
     </Appenders>
-    
+
     <!-- Logger --> 
     <Loggers> 	    
         <Root level="info">

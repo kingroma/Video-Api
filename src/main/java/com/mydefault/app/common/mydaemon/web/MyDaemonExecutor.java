@@ -1,5 +1,6 @@
 package com.mydefault.app.common.mydaemon.web;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -34,12 +35,13 @@ public class MyDaemonExecutor extends Thread {
 	@Override
 	public void run(){
 		try {
+			insertLog("P","");
 			logger.info("Start Daemon [ " + controllerNm + " ] " + new Date()) ;
 			Object obj = applicationContext.getBean(controllerNm);
 			Class<?>[] paramTypes = {vo.getClass()}; 					 
 			Object[] paramObjs 	  = {vo}; 
 			obj.getClass().getDeclaredMethod("execute", paramTypes).invoke(obj, paramObjs);			
-			insertLog("Y","");
+			
 		} catch (Exception e) {
 			String msg = "";
 			if ( e != null && e.getCause() != null && e.getCause().getMessage() != null ){
@@ -62,4 +64,5 @@ public class MyDaemonExecutor extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
 }

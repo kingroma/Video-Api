@@ -18,14 +18,31 @@ public class MyInterceptor implements HandlerInterceptor {
 		return true;
 	}
 
+	private boolean noLogUrl(String url) {
+		String[] targets = {"layout.jsp"} ;
+		boolean ret = false ; 
+		if ( url != null && !url.isEmpty() ) {
+			for (String t : targets) {
+				if (url.endsWith(t)) {
+					ret = true;
+					break;
+				}
+			}
+		}
+		
+		return ret ; 
+	}
+	
 	/**
 	 * Tiles 때문에 여러번 불림 참고 
 	 * */
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView mav) throws Exception {
 		String url = request.getRequestURI();
-		logger.info(url);
-		logger.info("MyInterCeptor Do SomeThing ");
+		
+		if ( !noLogUrl(url) ) {
+			logger.info(url);
+		}
 		
 		setModelAndView(mav);
 	}

@@ -4,57 +4,60 @@
 	<!--	<![CDATA[, ]]>	-->
 	<select id='list' resultType="MyMap">
 		SELECT 
-			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM, 
-		    D.DAEMON_ID , 
-		    D.DAEMON_NM , 
-		    D.DAEMON_TEXT , 
-		    D.CONTROLLER_NM , 
-		    D.INTERVAL_AT , 
-		    ( CASE WHEN D.INTERVAL_AT = 'Y' THEN '반복' ELSE '일회' END  ) AS INTERVAL_AT_NM , 
-		    D.MINUTE , 
-            (
-				CONCAT(
-					CAST( Floor( D.MINUTE / 60 ) AS INT ) , '시 ' ,
-                    CAST( Floor( D.MINUTE % 60 ) AS INT ) , '분 ' 
-                ) 
-                
-			)  AS MINUTE_EVERY_DAY_TIME ,   
-		    D.BGNDE , 
-            DATE_FORMAT(D.BGNDE , "%Y-%m-%d") AS BGNDE_FORMAT , 
-		    D.ENDDE ,
-            ( CASE 
-				WHEN D.ENDDE = '99991231' THEN '영구' 
-                ELSE DATE_FORMAT(D.ENDDE , "%Y-%m-%d") 
-			END ) AS ENDDE_FORMAT , 
-		    D.USE_AT ,
-            (CASE WHEN D.USE_AT = 'Y' THEN '사용' ELSE '미사용' END) AS USE_AT_NM ,
-            
-            DL.SORT_SN ,
-            DATE_FORMAT(DL.DAEMON_DT,"%Y-%m-%d %H:%i:%s") AS DAEMON_DE ,
-            DL.SUCC_AT ,
-            DL.MESSAGE 
-		    
-		FROM TB_MY_DAEMON_LOG DL
-		LEFT OUTER JOIN TB_MY_DAEMON D 
-			ON DL.DAEMON_ID = D.DAEMON_ID 
-		WHERE (@rownum:=0)=0 
-		
-		<if test="srchSuccAt != null and srchSuccAt != '' ">
-			AND SUCC_AT = #{srchSuccAt}
-		</if>
-		
-		<choose>
-			<when test="srchBgnde != null and srchBgnde != '' and srchEndde != null and srchEndde != '' ">
-				AND DATE_FORMAT(STR_TO_DATE(REPLACE(#{srchBgnde},'-',''),'%Y%m%d'),'%Y%m%d') <![CDATA[ <= ]]> DATE_FORMAT(DL.DAEMON_DT,'%Y%m%d') 
-        		AND DATE_FORMAT(DL.DAEMON_DT,'%Y%m%d') <![CDATA[ <= ]]> DATE_FORMAT(STR_TO_DATE(REPLACE(#{srchEndde},'-',''),'%Y%m%d'),'%Y%m%d')
-			</when>
-			<otherwise>
-				AND DATE_FORMAT(DL.DAEMON_DT,'%Y%m%d') = DATE_FORMAT(NOW(),'%Y%m%d')
-			</otherwise>
-		</choose>
-		
-		ORDER BY DL.DAEMON_DT DESC 
-		
+			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM,  
+			A.*
+			FROM ( 
+				SELECT
+				    D.DAEMON_ID , 
+				    D.DAEMON_NM , 
+				    D.DAEMON_TEXT , 
+				    D.CONTROLLER_NM , 
+				    D.INTERVAL_AT , 
+				    ( CASE WHEN D.INTERVAL_AT = 'Y' THEN '반복' ELSE '일회' END  ) AS INTERVAL_AT_NM , 
+				    D.MINUTE , 
+		            (
+						CONCAT(
+							Floor( D.MINUTE / 60 ) , '시 ' ,
+		                    Floor( D.MINUTE % 60 ) , '분 ' 
+		                ) 
+		                
+					)  AS MINUTE_EVERY_DAY_TIME ,   
+				    D.BGNDE , 
+		            DATE_FORMAT(D.BGNDE , "%Y-%m-%d") AS BGNDE_FORMAT , 
+				    D.ENDDE ,
+		            ( CASE 
+						WHEN D.ENDDE = '99991231' THEN '영구' 
+		                ELSE DATE_FORMAT(D.ENDDE , "%Y-%m-%d") 
+					END ) AS ENDDE_FORMAT , 
+				    D.USE_AT ,
+		            (CASE WHEN D.USE_AT = 'Y' THEN '사용' ELSE '미사용' END) AS USE_AT_NM ,
+		            
+		            DL.SORT_SN ,
+		            DATE_FORMAT(DL.START_DT,"%Y-%m-%d %H:%i:%s") AS DAEMON_DE ,
+		            DL.SUCC_AT ,
+		            DL.MESSAGE 
+				    
+				FROM TB_MY_DAEMON_LOG DL
+				LEFT OUTER JOIN TB_MY_DAEMON D 
+					ON DL.DAEMON_ID = D.DAEMON_ID 
+				WHERE (@rownum:=0)=0 
+				
+				<if test="srchSuccAt != null and srchSuccAt != '' ">
+					AND SUCC_AT = #{srchSuccAt}
+				</if>
+				
+				<choose>
+					<when test="srchBgnde != null and srchBgnde != '' and srchEndde != null and srchEndde != '' ">
+						AND DATE_FORMAT(STR_TO_DATE(REPLACE(#{srchBgnde},'-',''),'%Y%m%d'),'%Y%m%d') <![CDATA[ <= ]]> DATE_FORMAT(DL.START_DT,'%Y%m%d') 
+		        		AND DATE_FORMAT(DL.START_DT,'%Y%m%d') <![CDATA[ <= ]]> DATE_FORMAT(STR_TO_DATE(REPLACE(#{srchEndde},'-',''),'%Y%m%d'),'%Y%m%d')
+					</when>
+					<otherwise>
+						AND DATE_FORMAT(DL.START_DT,'%Y%m%d') = DATE_FORMAT(NOW(),'%Y%m%d')
+					</otherwise>
+				</choose>
+				
+				ORDER BY DL.START_DT DESC 
+			) A 
 	</select>
 	
 	

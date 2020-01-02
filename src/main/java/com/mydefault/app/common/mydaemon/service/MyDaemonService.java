@@ -9,6 +9,8 @@ import com.mydefault.app.generic.service.GenericService;
 public interface MyDaemonService extends GenericService<MyDaemonVO,MyDaemonMapper>{
 	public int insertBatchLog(MyDaemonVO entity) throws Exception ;
 	
+	public int updateBatchLog(MyDaemonVO entity) throws Exception ;
+	
 	public MyMap dashboardMonth() throws Exception ;
 	
 	public MyMap dashboardSixMonth() throws Exception ;

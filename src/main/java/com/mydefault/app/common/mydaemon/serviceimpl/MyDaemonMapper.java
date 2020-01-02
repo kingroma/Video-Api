@@ -13,6 +13,8 @@ public interface MyDaemonMapper extends GenericMapper<MyDaemonVO>{
 
 	public int insertBatchLog(MyDaemonVO entity) throws Exception ;
 	
+	public int updateBatchLog(MyDaemonVO entity) throws Exception ;
+	
 	public MyMap dashboardMonth() throws Exception ;
 	
 	public MyMap dashboardSixMonth() throws Exception ;

@@ -5,33 +5,39 @@
 	<select id='list' resultType="MyDaemonVO">
 		SELECT 
 			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM, 
-		    D.DAEMON_ID , 
-		    D.DAEMON_NM , 
-		    D.DAEMON_TEXT , 
-		    D.CONTROLLER_NM , 
-		    D.INTERVAL_AT , 
-		    ( CASE WHEN D.INTERVAL_AT = 'Y' THEN '반복' ELSE '일회' END  ) AS INTERVAL_AT_NM , 
-		    D.MINUTE , 
-            (
-				CONCAT(
-					CAST( Floor( D.MINUTE / 60 ) AS INT ) , '시 ' ,
-                    CAST( Floor( D.MINUTE % 60 ) AS INT ) , '분 ' 
-                ) 
-                
-			)  AS MINUTE_EVERY_DAY_TIME ,   
-		    D.BGNDE , 
-            DATE_FORMAT(D.BGNDE , "%Y-%m-%d") AS BGNDE_FORMAT , 
-		    D.ENDDE ,
-            ( CASE 
-				WHEN D.ENDDE = '99991231' THEN '영구' 
-                ELSE DATE_FORMAT(D.ENDDE , "%Y-%m-%d") 
-			END ) AS ENDDE_FORMAT , 
-		    D.USE_AT ,
-            (CASE WHEN D.USE_AT = 'Y' THEN '사용' ELSE '미사용' END) AS USE_AT_NM 
-		    
-		FROM TB_MY_DAEMON D
-		WHERE (@rownum:=0)=0 AND D.DEL_AT != 'Y'
-		ORDER BY D.DAEMON_ID 
+			A.* 
+			
+			FROM (
+				SELECT 
+					
+				    D.DAEMON_ID , 
+				    D.DAEMON_NM , 
+				    D.DAEMON_TEXT , 
+				    D.CONTROLLER_NM , 
+				    D.INTERVAL_AT , 
+				    ( CASE WHEN D.INTERVAL_AT = 'Y' THEN '반복' ELSE '일회' END  ) AS INTERVAL_AT_NM , 
+				    D.MINUTE , 
+		            (
+						CONCAT(
+							Floor( D.MINUTE / 60 )  , '시 ' ,
+		                    Floor( D.MINUTE % 60 )  , '분 ' 
+		                ) 
+		                
+					)  AS MINUTE_EVERY_DAY_TIME ,   
+				    D.BGNDE , 
+		            DATE_FORMAT(D.BGNDE , "%Y-%m-%d") AS BGNDE_FORMAT , 
+				    D.ENDDE ,
+		            ( CASE 
+						WHEN D.ENDDE = '99991231' THEN '영구' 
+		                ELSE DATE_FORMAT(D.ENDDE , "%Y-%m-%d") 
+					END ) AS ENDDE_FORMAT , 
+				    D.USE_AT ,
+		            (CASE WHEN D.USE_AT = 'Y' THEN '사용' ELSE '미사용' END) AS USE_AT_NM 
+				    
+				FROM TB_MY_DAEMON D
+				WHERE (@rownum:=0)=0 AND D.DEL_AT != 'Y'
+				ORDER BY D.DAEMON_ID 
+			) A
 	</select>
 	
 	<select id='view' resultType="MyDaemonVO">
@@ -46,8 +52,8 @@
 		    D.MINUTE , 
             (
 				CONCAT(
-					CAST( Floor( D.MINUTE / 60 ) AS INT ) , '시 ' ,
-                    CAST( Floor( D.MINUTE % 60 ) AS INT ) , '분 ' 
+					Floor( D.MINUTE / 60 ) , '시 ' ,
+                    Floor( D.MINUTE % 60 ) , '분 ' 
                 ) 
                 
 			)  AS MINUTE_EVERY_DAY_TIME ,   
@@ -123,12 +129,13 @@
 	
 	<insert id='insertBatchLog'>
 		<selectKey keyProperty="sortSn" resultType="String" order="BEFORE">
-			SELECT COUNT(*) + 1 FROM TB_MY_DAEMON_LOG WHERE DAEMON_ID = #{daemonId}
+			SELECT 	CONCAT(DATE_FORMAT(NOW(),'%Y%m%d'), '_' , COUNT(*) + 1 ) FROM TB_MY_DAEMON_LOG 
+			WHERE DAEMON_ID = #{daemonId} AND SORT_SN LIKE CONCAT(DATE_FORMAT(NOW(),'%Y%m%d') , '_%' );
 		</selectKey>
 		INSERT INTO TB_MY_DAEMON_LOG (
 			DAEMON_ID , 
 			SORT_SN , 
-			DAEMON_DT ,
+			START_DT ,
 			SUCC_AT , 
 			MESSAGE 
 		) VALUES (
@@ -140,6 +147,15 @@
 		)
 	</insert>
 	
+	<update id='updateBatchLog'>
+		UPDATE TB_MY_DAEMON_LOG
+			SET 
+				END_DT = NOW() ,
+				SUCC_AT = #{succAt} ,
+				MESSAGE = #{message} 
+		WHERE DAEMON_ID = #{daemonId} AND SORT_SN = #{sortSn}
+	</update>
+	
 	<select id='dashboardMonth' resultType="MyMap">
 		SELECT 
 			IFNULL(ROUND(( SELECT
@@ -148,7 +164,7 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'Y' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m')) * 100 / A.TOTAL ),0) AS SUCC,
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m')) * 100 / A.TOTAL ),0) AS SUCC,
 				
 			IFNULL(ROUND(( SELECT
 				COUNT(*) 
@@ -156,7 +172,7 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'N' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m')) * 100 / A.TOTAL ),0) AS FAIL
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m')) * 100 / A.TOTAL ),0) AS FAIL
                 
 			FROM (
 	            SELECT
@@ -164,7 +180,7 @@
 					
 				FROM TB_MY_DAEMON_LOG
 				WHERE 
-					DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m') 
+					DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m') 
             ) A
 	</select>
 	
@@ -176,13 +192,13 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'Y' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m') ) / 
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m') ) / 
 			( SELECT
 				( CASE WHEN COUNT(*) = 0 THEN 1 ELSE COUNT(*) END ) 
 				
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m') ) * 100 ) ,0) AS PER1 ,
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(NOW() , '%Y%m') ) * 100 ) ,0) AS PER1 ,
 			
 			DATE_FORMAT(NOW() , '%M') AS M1 ,
 			
@@ -192,13 +208,13 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'Y' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 MONTH) , '%Y%m') ) / 
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 MONTH) , '%Y%m') ) / 
 			( SELECT
 				( CASE WHEN COUNT(*) = 0 THEN 1 ELSE COUNT(*) END ) 
 				
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 MONTH) , '%Y%m') ) * 100 ),0) AS PER2 ,
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 MONTH) , '%Y%m') ) * 100 ),0) AS PER2 ,
 			
 			DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -1 MONTH)  , '%M') AS M2 ,
 			
@@ -208,13 +224,13 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'Y' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -2 MONTH) , '%Y%m') ) / 
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -2 MONTH) , '%Y%m') ) / 
 			( SELECT
 				( CASE WHEN COUNT(*) = 0 THEN 1 ELSE COUNT(*) END ) 
 				
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -2 MONTH) , '%Y%m') ) * 100 ),0) AS PER3 ,
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -2 MONTH) , '%Y%m') ) * 100 ),0) AS PER3 ,
 			
 			DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -2 MONTH)  , '%M') AS M3 ,
 			
@@ -224,13 +240,13 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'Y' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 MONTH) , '%Y%m') ) / 
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 MONTH) , '%Y%m') ) / 
 			( SELECT
 				( CASE WHEN COUNT(*) = 0 THEN 1 ELSE COUNT(*) END ) 
 				
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 MONTH) , '%Y%m') ) * 100 ),0) AS PER4 ,
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 MONTH) , '%Y%m') ) * 100 ),0) AS PER4 ,
 		    
 		    DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -3 MONTH)  , '%M') AS M4 ,
 		        
@@ -240,13 +256,13 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'Y' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 MONTH) , '%Y%m') ) / 
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 MONTH) , '%Y%m') ) / 
 			( SELECT
 				( CASE WHEN COUNT(*) = 0 THEN 1 ELSE COUNT(*) END ) 
 				
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 MONTH) , '%Y%m') ) * 100 ),0) AS PER5 ,
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 MONTH) , '%Y%m') ) * 100 ),0) AS PER5 ,
 		    
 		    DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -4 MONTH)  , '%M') AS M5 ,
 		        
@@ -256,13 +272,13 @@
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
 				SUCC_AT = 'Y' AND
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 MONTH) , '%Y%m') ) / 
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 MONTH) , '%Y%m') ) / 
 			( SELECT
 				( CASE WHEN COUNT(*) = 0 THEN 1 ELSE COUNT(*) END ) 
 				
 			FROM TB_MY_DAEMON_LOG
 			WHERE 
-				DATE_FORMAT(DAEMON_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 MONTH) , '%Y%m') ) * 100 ),0) AS PER6 ,
+				DATE_FORMAT(END_DT , '%Y%m') = DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 MONTH) , '%Y%m') ) * 100 ),0) AS PER6 ,
 				
 			DATE_FORMAT(DATE_ADD(NOW(), INTERVAL -5 MONTH)  , '%M') AS M6 
 	</select>

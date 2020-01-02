@@ -33,7 +33,8 @@ public class TestController extends GenericController<TestVO,TestService>{
 	// 배치 실행
 	public void execute(MyDaemonVO vo) throws Exception {
 		logger.info("Start execute" + vo.getDaemonId());
-		logger.info("param : "+vo.getDaemonParam());
+		logger.info("param : " + vo.getDaemonParam());
+		logger.info("sortsn : " + vo.getSortSn());
 	}
 
 }

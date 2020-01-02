@@ -35,6 +35,11 @@ public class MyDaemonServiceImpl extends GenericServiceImpl<MyDaemonVO,MyDaemonM
 	}
 	
 	@Override
+	public int updateBatchLog(MyDaemonVO entity) throws Exception {
+		return mapper.updateBatchLog(entity);
+	}
+	
+	@Override
 	public MyMap dashboardMonth() throws Exception {
 		return mapper.dashboardMonth();
 	}

@@ -11,6 +11,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.mydefault.app.common.mydaemon.service.MyDaemonLogService;
 import com.mydefault.app.common.mydaemon.service.MyDaemonVO;
@@ -50,4 +51,5 @@ public class MyDaemonLogController extends GenericController<MyDaemonVO,MyDaemon
 		setModelEntity(model, entity, getNameVO());
 		return viewMapper(GenericCode.LIST);
 	}
+
 }
