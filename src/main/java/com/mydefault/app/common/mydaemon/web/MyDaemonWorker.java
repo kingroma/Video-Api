@@ -67,8 +67,8 @@ public class MyDaemonWorker extends Thread{
 			intervalAt = vo.getIntervalAt() ;
 			minute = Long.parseLong(vo.getMinute()) ;
 			
-			nextWork = new Date(serializeSecond(new Date()).getTime() + ( minute * minToSec * sToMs ) );
-			lastWork = serializeSecond(new Date());
+			nextWork = new Date(removeSecond(new Date()).getTime() + ( minute * minToSec * sToMs ) );
+			lastWork = removeSecond(new Date());
 			
 			if ( "Y".equalsIgnoreCase(intervalAt) && minute > 0 ) {
 				interverWorker();
@@ -89,13 +89,13 @@ public class MyDaemonWorker extends Thread{
 				if ( nextWork.getTime() <= current.getTime() ) { 
 					if (canWork(current)){
 						if ( isFinish ) {
-							isFinish = false ; 
+							isFinish = true ; 
 							try {
 								if ( hasTerm ) {
 									// term 이 있을경우 현재시간에서 + Interval Time
-									nextWork = new Date(serializeSecond(current).getTime() + ( minute * minToSec * sToMs )) ;
+									nextWork = new Date(removeSecond(current).getTime() + ( minute * minToSec * sToMs )) ;
 								}else {
-									nextWork = serializeSecond(new Date(nextWork.getTime() + ( minute * minToSec * sToMs ))) ;
+									nextWork = removeSecond(new Date(nextWork.getTime() + ( minute * minToSec * sToMs ))) ;
 								}
 								lastWork = current;
 								myDaemonExecutor = new MyDaemonExecutor(vo, applicationContext, myDaemonService);
@@ -123,7 +123,7 @@ public class MyDaemonWorker extends Thread{
 	// 하루에 한번
 	private void everydayWorker() {
 		try {
-			nextWork = serializeSecond(firstDoDate ( minute ) ); 
+			nextWork = removeSecond(firstDoDate ( minute ) ); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -229,7 +229,7 @@ public class MyDaemonWorker extends Thread{
 	}
 	
 	// s ms 삭제 
-	private Date serializeSecond(Date input) {
+	private Date removeSecond(Date input) {
 		try {
 			input = new Date(input.getTime() - Long.parseLong(sdfSsSSS.format(input)) );
 		} catch (Exception e) {
