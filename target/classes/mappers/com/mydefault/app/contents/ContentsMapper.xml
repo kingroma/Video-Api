@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydefault.app.contents.serviceimpl.ContentsMapper">
+	<!--	<![CDATA[, ]]>	-->
+	<select id='list' resultType="MyMap">
+		SELECT 
+			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM, 
+			A.*
+			
+			FROM (  
+				SELECT 
+					C.CONTENTS_ID , 
+					C.CONTENTS_NM ,
+					C.USE_AT 
+				FROM TB_CONTENTS C
+				
+				WHERE C.DEL_AT = 'N' 
+				<if test="useAt != null and useAt != ''">
+					AND C.USE_AT = #{useAt}
+				</if>
+			) A 
+		WHERE (@rownum:=0)=0
+	</select>
+	
+	<select id='view' resultType="ContentsVO">
+		SELECT 
+			C.CONTENTS_ID , 
+			C.CONTENTS_NM ,
+			C.USE_AT 
+		FROM TB_CONTENTS C
+		
+		WHERE C.DEL_AT = 'N'
+		AND C.CONTENTS_ID = #{contentsId} 		
+	</select>
+	
+	<select id='listVideo' resultType="MyMap">
+		SELECT 
+			CL.CONTENTS_ID , 
+			CL.VIDEO_SUPER_ID , 
+			CL.SORT_SN , 
+            
+            VS.VIDEO_SUPER_NM , 
+            VS.VIDEO_SUPER_MAIN_IMAGE 
+		FROM TB_CONTENTS_LIST CL
+        LEFT OUTER JOIN TB_VIDEO_SUPER VS 
+		ON CL.VIDEO_SUPER_ID = VS.VIDEO_SUPER_ID 
+        WHERE CL.CONTENTS_ID = #{contentsId}
+		ORDER BY CL.SORT_SN ASC
+	</select>
+	
+	<insert id='insert'>
+		<selectKey keyProperty="contentsId" resultType="String" order="BEFORE">
+			SELECT 	CONCAT('CONTENTS_', LPAD(COUNT(*) + 1,5,'0') ) FROM TB_CONTENTS 
+			WHERE CONTENTS_ID LIKE 'CONTENTS_%'
+		</selectKey>
+		INSERT INTO TB_CONTENTS (
+			CONTENTS_ID , 
+			CONTENTS_NM , 
+			USE_AT , 
+			DEL_AT 
+		) VALUES (
+			#{contentsId} , 
+			#{contentsNm} , 
+			#{useAt} , 
+			'N'
+		)
+	</insert>
+	
+	<insert id='insertVideo'>
+		INSERT INTO TB_CONTENTS_LIST (
+			CONTENTS_ID , 
+			VIDEO_SUPER_ID , 
+			SORT_SN 
+		) VALUES (
+			#{contentsId} , 
+			#{videoSuperId} , 
+			#{sortSn}
+		) 
+	</insert>
+	
+	<update id='update'>
+		UPDATE TB_CONTENTS SET 
+			CONTENTS_NM = #{contentsNm}, 
+			USE_AT = #{useAt}
+			 
+		WHERE CONTENTS_ID = #{contentsId}
+	</update>
+	
+	<delete id='deleteVideo'>
+		DELETE FROM TB_CONTENTS_LIST WHERE CONTENTS_ID = #{contentsId} 
+	</delete>
+	
+	<update id='delete'>
+		UPDATE TB_CONTENTS SET 
+			DEL_AT = 'Y'
+			 
+		WHERE CONTENTS_ID = #{contentsId}
+	</update>
+	
+	<select id='mainContents' resultType="MyMap">
+		
+	</select>
+</mapper>

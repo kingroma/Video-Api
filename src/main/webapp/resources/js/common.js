@@ -1,3 +1,18 @@
+$(document).ready(function(){
+	
+	// document.getElementsByClassName
+	// autosize(document.getElementById('daemonParam'));
+	
+	var autosizes = document.getElementsByClassName('autosize');
+	
+	if ( autosizes != null && autosizes != undefined ){
+		for ( var i = 0 ; i < autosizes.length ; i ++ ) {
+			var auto = autosizes[i];
+			autosize(auto);
+		}
+	}
+});
+
 function getContextPath(){
 	var pathLen = contextPath.length;
 	if(contextPath.substring(pathLen-1, pathLen) == "/" ){

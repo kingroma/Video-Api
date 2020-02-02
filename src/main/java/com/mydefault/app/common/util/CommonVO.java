@@ -5,9 +5,15 @@ import java.io.Serializable;
 public class CommonVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	private String token = "";
+	
 	private String useAt = "";
 
 	private String useAtNm = "";
+	
+	private String delAt = "" ; 
+	
+	private String delAtNm = "";
 	
 	private String rownum = ""; 
 	
@@ -63,6 +69,30 @@ public class CommonVO implements Serializable {
 
 	public void setSrchEndde(String srchEndde) {
 		this.srchEndde = srchEndde;
+	}
+
+	public String getDelAt() {
+		return delAt;
+	}
+
+	public void setDelAt(String delAt) {
+		this.delAt = delAt;
+	}
+
+	public String getDelAtNm() {
+		return delAtNm;
+	}
+
+	public void setDelAtNm(String delAtNm) {
+		this.delAtNm = delAtNm;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 	
 }

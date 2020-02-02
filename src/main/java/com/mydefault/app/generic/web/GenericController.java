@@ -29,17 +29,17 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	@Resource
     protected MyMessageSource myMessageSource;
 	
-	protected String pathBase 	= "";	// jsp 파일 경로 
-	protected String filePath   = "";	// jsp 파일 경로(TILES 포함)
-	protected String fileSuffix = "";	// jsp 파일 접두어	
-	protected String urlBase 	= "";	// url정보
+	protected String pathBase 	= "";	// jsp �뙆�씪 寃쎈줈 
+	protected String filePath   = "";	// jsp �뙆�씪 寃쎈줈(TILES �룷�븿)
+	protected String fileSuffix = "";	// jsp �뙆�씪 �젒�몢�뼱	
+	protected String urlBase 	= "";	// url�젙蹂�
 		
 	protected S service;	
 	protected Class<T> voClass;
 	protected Class<S> serviceClass;
 	protected ApplicationContext applicationContext;
 	
-	/** 생성자 */ 
+	/** �깮�꽦�옄 */ 
 	protected GenericController(Class<T> voClass, Class<S> serviceClass) {
 		this.voClass = voClass;
 		this.serviceClass = serviceClass;
@@ -49,11 +49,11 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-     * 생성자 
-     * @param voClass  - vo 클래스
-     * @param serviceClass - service 클래스
-     * @param filePath 	   - jsp 파일 경로
-     * @param fileSuffix   - jsp 파일 접두어
+     * �깮�꽦�옄 
+     * @param voClass  - vo �겢�옒�뒪
+     * @param serviceClass - service �겢�옒�뒪
+     * @param filePath 	   - jsp �뙆�씪 寃쎈줈
+     * @param fileSuffix   - jsp �뙆�씪 �젒�몢�뼱
      */
 	protected GenericController(Class<T> voClass, Class<S> serviceClass, String filePath, String fileSuffix) {
 		this.voClass = voClass;
@@ -105,11 +105,11 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-     * 리스트 : 페이징 처리됨
+     * 由ъ뒪�듃 : �럹�씠吏� 泥섎━�맖
      * @param vo - entity VO
      * @param request - HttpServletRequest
      * @param model - ModelMap
-     * @return String - 페이지 URL
+     * @return String - �럹�씠吏� URL
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
      * @throws Exception
@@ -118,7 +118,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	public String list(@ModelAttribute T entity, HttpServletRequest request, ModelMap model) throws Exception {		
 		setModelEntity(model, entity, "ivo");	
 		
-		// entity 초기화
+		// entity 珥덇린�솕
 		if(retrieveUrlSub(request).indexOf("list") > -1){
 			entity = addReference(entity, model);
 		}
@@ -134,11 +134,11 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-	 * 전체 리스트
+	 * �쟾泥� 由ъ뒪�듃
 	 * @param vo - entity VO
 	 * @param request - HttpServletRequest
 	 * @param model - ModelMap
-	 * @return String - 페이지 URL
+	 * @return String - �럹�씠吏� URL
 	 * @throws Exception
 	 */
 	@RequestMapping({"/listAll.do","/searchAll.do"})
@@ -160,11 +160,11 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 		
 	/**
-     * 상세조회 
+     * �긽�꽭議고쉶 
      * @param vo - entity VO
      * @param request - HttpServletRequest
      * @param model - ModelMap 
-     * @return String - 페이지 URL
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      */
 	@RequestMapping("/view.do")
@@ -182,11 +182,11 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 		
 	/**
-     * 등록화면
+     * �벑濡앺솕硫�
      * @param vo - entity VO
      * @param request - HttpServletRequest
      * @param model - ModelMap 
-     * @return String - 페이지 URL
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      */
 	@RequestMapping("/regist.do")
@@ -199,11 +199,11 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-     * 수정화면 
+     * �닔�젙�솕硫� 
      * @param vo - entity VO
      * @param request - HttpServletRequest
      * @param model - ModelMap 
-     * @return String - 페이지 URL
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      */
 	@RequestMapping("/modify.do")
@@ -222,12 +222,12 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	
 	
 	/**
-     * 입력 처리 
+     * �엯�젰 泥섎━ 
      * @param vo - entity VO
      * @param bindingResult -BindingResult
      * @param request  -HttpServletRequest
      * @param model - ModelMap
-     * @return String - 페이지 URL
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      */
 	@RequestMapping("/insert.do") 
@@ -251,16 +251,16 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		}
     	ra.addFlashAttribute(GenericCode.RESULT_CD, resultCd);
 		ra.addFlashAttribute(GenericCode.MESSAGE, message);
-		return CommonUtil.getRedirectView(viewMapper(GenericCode.VIEW_REDIRECT));
+		return CommonUtil.getRedirectView(viewMapper(GenericCode.MODIFY_REDIRECT));
 	}
 		
 	/**
-     * 수정 처리 
+     * �닔�젙 泥섎━ 
      * @param vo - entity VO
      * @param bindingResult -BindingResult
      * @param request  -HttpServletRequest
      * @param model - ModelMap
-     * @return String - 페이지 URL
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      */
 	@RequestMapping("/update.do") 
@@ -284,16 +284,16 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		}
 		ra.addFlashAttribute(GenericCode.RESULT_CD, resultCd);
 		ra.addFlashAttribute(GenericCode.MESSAGE, message);
-		return CommonUtil.getRedirectView(viewMapper(GenericCode.VIEW_REDIRECT));
+		return CommonUtil.getRedirectView(viewMapper(GenericCode.MODIFY_REDIRECT));
 	}
 		
 	/**
-     * 삭제
+     * �궘�젣
      * @param vo - entity VO
      * @param request -HttpServletRequest
      * @param ra - RedirectAttributes
      * @param model - ModelMap 
-     * @return String - 페이지 URL
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      * if (EgovDoubleSubmitHelper.checkAndSaveToken(request)) {}
      */
@@ -316,7 +316,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	
 		
 	/**
-     * ajax 리스트 : 페이징 처리됨 
+     * ajax 由ъ뒪�듃 : �럹�씠吏� 泥섎━�맖 
      * @param vo - entity VO
      * @param request -HttpServletRequest
      * @param model - ModelMap
@@ -335,7 +335,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 		
 	/**
-     * ajax 전체 리스트 
+     * ajax �쟾泥� 由ъ뒪�듃 
      * @param vo - entity VO
      * @param request -HttpServletRequest
      * @param model - ModelMap
@@ -354,7 +354,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 		
 	/**
-     * ajax 상세조회
+     * ajax �긽�꽭議고쉶
      * @param vo - entity VO
      * @param request -HttpServletRequest
      * @param model - ModelMap
@@ -373,7 +373,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-     * ajax 입력 처리 
+     * ajax �엯�젰 泥섎━ 
      * @param vo - entity VO
      * @param bindingResult -BindingResult
      * @param request -HttpServletRequest
@@ -406,7 +406,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-     * ajax 수정 처리 
+     * ajax �닔�젙 泥섎━ 
      * @param vo - entity VO
      * @param bindingResult -BindingResult
      * @param request -HttpServletRequest
@@ -438,7 +438,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-     * ajax 삭제 처리 
+     * ajax �궘�젣 泥섎━ 
      * @param vo - entity VO 
      * @param request -HttpServletRequest
      * @param model - ModelMap
@@ -480,7 +480,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		return new ModelAndView("jsonView", model);
 	}
 	
-	/** HP Fortify 처리 : model.addAttribute(getNameVO(), entity);   model.addAttribute("ivo", entity);  대처  */
+	/** HP Fortify 泥섎━ : model.addAttribute(getNameVO(), entity);   model.addAttribute("ivo", entity);  ��泥�  */
 	public ModelMap setModelEntity(ModelMap model, T entity, String attributeName) throws Exception {
 		String attrNm = (attributeName == null || "".equals(attributeName))?getNameVO():attributeName;
 		if(entity == null){
@@ -493,9 +493,9 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	
 		
 	/** 
-	 * 이동 페이지 URL 
-     * @param action - 액션 페이지 번호 (Integer)
-     * @return String - 페이지 URL
+	 * �씠�룞 �럹�씠吏� URL 
+     * @param action - �븸�뀡 �럹�씠吏� 踰덊샇 (Integer)
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      */
 	public String viewMapper(int action) {		
@@ -503,13 +503,13 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		switch(action){
 			// base URL 
 			case GenericCode.LIST 	    : view = this.filePath + "/" + fileSuffix + "List";   break;			
-			case GenericCode.VIEW 	    : view = this.filePath + "/" + fileSuffix + "View";   break;
+			case GenericCode.VIEW 	    : view = this.filePath + "/" + fileSuffix + "Regist";   break;
 			case GenericCode.REGIST	    : view = this.filePath + "/" + fileSuffix + "Regist"; break;
 			
 			// redirect URL 
 			case GenericCode.LIST_REDIRECT       : view = this.urlBase + "/list.do"      ;   break;
 			case GenericCode.LIST_ALL_REDIRECT   : view = this.urlBase + "/listAll.do"   ;   break;
-			case GenericCode.VIEW_REDIRECT       : view = this.urlBase + "/view.do"      ;   break;			
+			case GenericCode.VIEW_REDIRECT       : view = this.urlBase + "/regist.do"      ;   break;			
 			case GenericCode.REGIST_REDIRECT     : view = this.urlBase + "/regist.do"    ;   break;			
 			case GenericCode.MODIFY_REDIRECT     : view = this.urlBase + "/modify.do"    ;   break;			
 			default : 
@@ -518,9 +518,9 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/** 
-	 * 이동 페이지 URL 
-     * @param action - 액션 페이지 세부 URL (String)
-     * @return String - 페이지 URL
+	 * �씠�룞 �럹�씠吏� URL 
+     * @param action - �븸�뀡 �럹�씠吏� �꽭遺� URL (String)
+     * @return String - �럹�씠吏� URL
      * @throws Exception
      * Example : return viewMapper("columnPopupList");
      * 			 return viewMapper(GenericCode.TILES_POPUP, "columnPopupList");
@@ -547,8 +547,8 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	} 
 		
 	/**
-     * 기본 url 추출 : RequestMapping에서 추출
-     * @return url  - 입력 url
+     * 湲곕낯 url 異붿텧 : RequestMapping�뿉�꽌 異붿텧
+     * @return url  - �엯�젰 url
      */
 	private String retrieveUrlBase() {
 		RequestMapping rm = this.getClass().getAnnotation(RequestMapping.class);
@@ -556,16 +556,16 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		return url.substring(0, url.indexOf("/*") );
 	}
 	
-	/** request url에서 마지막 '/'뒤의 url 추출*/
+	/** request url�뿉�꽌 留덉�留� '/'�뮘�쓽 url 異붿텧*/
 	public String retrieveUrlSub(HttpServletRequest request) {
 		String url = request.getRequestURI();
 		return url.substring(url.lastIndexOf("/")+1);
 	}
 		
 	/**
-     * jsp파일  경로 계산 :  filePath가 없는 경우 추출된 urlBase 선언
-     * @param objPath  	- 파일 경로
-     * @return resultPath  - 결과 경로
+     * jsp�뙆�씪  寃쎈줈 怨꾩궛 :  filePath媛� �뾾�뒗 寃쎌슦 異붿텧�맂 urlBase �꽑�뼵
+     * @param objPath  	- �뙆�씪 寃쎈줈
+     * @return resultPath  - 寃곌낵 寃쎈줈
      */
 	private String getFilePathStr(Object objPath) {
 		String resultPath = StringUtil.isString(objPath);
@@ -579,9 +579,9 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 		
 	/**
-     * jsp파일 접두어 계산 : fileSuffix가 없는 경우 voClass에서 VO를 제외한 이름으로 셋팅
-     * @param objSuffix  	- 파일 접두어
-     * @return resultSuffix  - 결과 접두어
+     * jsp�뙆�씪 �젒�몢�뼱 怨꾩궛 : fileSuffix媛� �뾾�뒗 寃쎌슦 voClass�뿉�꽌 VO瑜� �젣�쇅�븳 �씠由꾩쑝濡� �뀑�똿
+     * @param objSuffix  	- �뙆�씪 �젒�몢�뼱
+     * @return resultSuffix  - 寃곌낵 �젒�몢�뼱
      */
 	private String getFileSuffixStr(Object objSuffix) {
 		String resultSuffix = StringUtil.isString(objSuffix);
@@ -589,7 +589,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		if("".equals(resultSuffix)){
 			String domainNm = StringUtil.isString(voClass.getSimpleName());
 			int domainLen = domainNm.length();					
-			// 2자 이상, 문자중 VO 존재하는 경우
+			// 2�옄 �씠�긽, 臾몄옄以� VO 議댁옱�븯�뒗 寃쎌슦
 			if ( (domainLen > 2) &&  (domainNm.toUpperCase()).matches(".*VO") ) { 
 				resultSuffix = domainNm.substring(0, (domainLen-2));
 			}else{
@@ -600,10 +600,10 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 			
 	/**
-	 * 오류 메시지
+	 * �삤瑜� 硫붿떆吏�
 	 * @param bindingResult - BindingResult
 	 * @param ModelMap - model
-	 * @return String - 오류 메시지
+	 * @return String - �삤瑜� 硫붿떆吏�
 	 */
 	public String validateMsg(BindingResult bindingResult) {
 		String errorMsg = "";		
@@ -612,7 +612,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 			if (bindingResult.hasErrors()) { 
 	    		List<FieldError> errorList = bindingResult.getFieldErrors();            
 	            for(FieldError fe : errorList){
-	            	// 자바스크립트에서 <br/>를 \n으로 치환(\n 직접 사용시 오류 발생)
+	            	// �옄諛붿뒪�겕由쏀듃�뿉�꽌 <br/>瑜� \n�쑝濡� 移섑솚(\n 吏곸젒 �궗�슜�떆 �삤瑜� 諛쒖깮)
 	            	errorMsg += myMessageSource.getMessage(fe.getDefaultMessage(), fe.getArguments())+"<br/>";
 	            }
 	    	} 			 
@@ -626,9 +626,9 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 	}
 	
 	/**
-     * 예외 처리된 내용에서  메시지를 추출하여 message에 추가해줌.
+     * �삁�쇅 泥섎━�맂 �궡�슜�뿉�꽌  硫붿떆吏�瑜� 異붿텧�븯�뿬 message�뿉 異붽��빐以�.
      * @param e - Exception
-     * @param message - 메시지
+     * @param message - 硫붿떆吏�
      * @return String - message
      * @throws Exception
      */
@@ -644,7 +644,7 @@ public class GenericController<T, S extends GenericService<T, ? extends GenericM
 		return message;
 	}
 		
-	/** vo 클래의 첫 문자를 소분자로 변경 
+	/** vo �겢�옒�쓽 泥� 臾몄옄瑜� �냼遺꾩옄濡� 蹂�寃� 
 	 * @return String  
      */
 	public String getNameVO(){

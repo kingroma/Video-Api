@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydefault.app.video.serviceimpl.VideoMapper">
+	<!--	<![CDATA[, ]]>	-->
+	<select id='list' resultType="MyMap">
+		SELECT 
+			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM, 
+			A.* 
+				
+			FROM ( 
+			
+				SELECT 
+					V.VIDEO_SUPER_ID , 
+					V.VIDEO_ID , 
+					V.VIDEO_NM , 
+					V.VIDEO_EXPLAIN , 
+					V.VIDEO_PLAY_PATH , 
+					
+					V.VIDEO_REAL_PATH ,
+					V.USE_AT , 
+					V.DEL_AT
+					 
+				FROM TB_VIDEO V
+				WHERE V.DEL_AT = 'N' 
+				
+				ORDER BY V.VIDEO_ID 
+			) A 
+		WHERE (@rownum:=0)=0
+	</select>
+	
+	<select id='view' resultType='VideoVO'>
+		SELECT 
+			V.VIDEO_SUPER_ID , 
+			V.VIDEO_ID , 
+			V.VIDEO_NM , 
+			V.VIDEO_EXPLAIN , 
+			V.VIDEO_PLAY_PATH , 
+			
+			V.VIDEO_REAL_PATH ,
+			V.USE_AT , 
+			V.DEL_AT
+			 
+		FROM TB_VIDEO V
+		WHERE 
+			V.DEL_AT = 'N' 
+		AND V.VIDEO_ID = #{videoId}
+		 
+	</select>
+	
+	<select id='getNewVideoSuperId' resultType="String">
+		SELECT 	CONCAT('VIDEO_SUPER_', LPAD(COUNT(*) + 1,5,'0') ) FROM TB_VIDEO 
+		WHERE VIDEO_SUPER_ID LIKE 'VIDEO_SUPER_%'
+	</select>
+	
+	<select id='getNewVideoId' resultType="String">
+		SELECT 	CONCAT('VIDEO_', LPAD(COUNT(*) + 1,5,'0') ) FROM TB_VIDEO 
+		WHERE VIDEO_ID LIKE 'VIDEO_%'
+	</select>
+	
+	
+	
+	<insert id='insert'>
+		INSERT INTO TB_VIDEO(
+			VIDEO_SUPER_ID ,  
+			VIDEO_ID , 
+			VIDEO_NM , 
+			VIDEO_EXPLAIN ,
+			VIDEO_PLAY_PATH , 
+			
+			VIDEO_REAL_PATH ,
+			USE_AT , 
+			DEL_AT 
+		) VALUES (
+			#{videoSuperId} , 
+			#{videoId} , 
+			#{videoNm} , 
+			IFNULL(#{videoExplain} ,''), 
+			#{videoPlayPath} ,			
+			
+			#{videoRealPath} ,
+			(CASE WHEN #{useAt} IS NULL THEN 'Y' WHEN #{useAt} = '' THEN 'Y' ELSE #{useAt} END ),
+			(CASE WHEN #{delAt} IS NULL THEN 'N' WHEN #{delAt} = '' THEN 'N' ELSE #{delAt} END )
+		) 
+	</insert>
+	
+	<update id='update'>
+		UPDATE TB_VIDEO SET 
+			VIDEO_SUPER_ID = #{videoSuperId} ,
+			VIDEO_NM = #{videoNm} , 
+			VIDEO_EXPLAIN = IFNULL(#{videoExplain} ,''),
+			VIDEO_PLAY_PATH = #{videoPlayPath} ,
+			VIDEO_REAL_PATH = #{videoRealPath} ,
+			
+			USE_AT = (CASE WHEN #{useAt} IS NULL THEN 'Y' WHEN #{useAt} = '' THEN 'Y' ELSE #{useAt} END )
+		WHERE VIDEO_ID = #{videoId}
+	</update>
+	
+	<update id='delete'>
+		UPDATE TB_VIDEO SET 
+			DEL_AT = 'Y'
+		WHERE VIDEO_ID = #{videoId}
+	</update>
+	
+</mapper>

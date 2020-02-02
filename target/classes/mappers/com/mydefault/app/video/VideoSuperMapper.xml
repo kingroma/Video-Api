@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydefault.app.video.serviceimpl.VideoSuperMapper">
+	<!--	<![CDATA[, ]]>	-->
+	<select id='list' resultType="MyMap">
+		SELECT 
+			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM, 
+			A.* 
+			FROM (
+				SELECT
+					VS.VIDEO_SUPER_ID ,
+				    VS.VIDEO_SUPER_NM , 
+				    VS.VIDEO_SUPER_EXPLAIN ,
+				    VS.VIDEO_SUPER_ACTOR ,
+				    VS.VIDEO_SUPER_GENRE , 
+				    
+				    VS.VIDEO_SUPER_MAIN_IMAGE , 
+				    VS.USE_AT ,
+				    VS.DEL_AT 
+				FROM TB_VIDEO_SUPER VS
+				WHERE DEL_AT = 'N'
+		) A 
+		WHERE (@rownum:=0)=0
+	</select>
+	
+	<select id='view' resultType="VideoSuperVO">
+		SELECT
+			VS.VIDEO_SUPER_ID ,
+		    VS.VIDEO_SUPER_NM , 
+		    VS.VIDEO_SUPER_EXPLAIN ,
+		    VS.VIDEO_SUPER_ACTOR , 
+		    VS.VIDEO_SUPER_GENRE ,
+		    VS.VIDEO_SUPER_MAIN_IMAGE , 
+		    
+		    VS.USE_AT ,
+		    VS.DEL_AT 
+		FROM TB_VIDEO_SUPER VS
+		WHERE VS.DEL_AT = 'N'
+		AND VS.VIDEO_SUPER_ID = #{videoSuperId}
+	</select>
+	
+	<select id='getNewVideoSuperId' resultType="String">
+		SELECT 	CONCAT('VIDEO_SUPER_', LPAD(COUNT(*) + 1,5,'0') ) FROM TB_VIDEO_SUPER
+		WHERE VIDEO_SUPER_ID LIKE 'VIDEO_SUPER_%'
+	</select>
+	
+	<insert id='insert'>
+		INSERT INTO TB_VIDEO_SUPER(
+			VIDEO_SUPER_ID ,  
+			VIDEO_SUPER_NM , 
+			VIDEO_SUPER_EXPLAIN ,
+			VIDEO_SUPER_ACTOR , 
+			VIDEO_SUPER_GENRE ,
+			
+			VIDEO_SUPER_MAIN_IMAGE ,
+			USE_AT , 
+			DEL_AT 
+		) VALUES (
+			#{videoSuperId} ,
+			#{videoSuperNm} ,
+			IFNULL( #{videoSuperExplain} , '' ),
+			IFNULL( #{videoSuperActor} , '' ),  
+			IFNULL( #{videoSuperGenre} , '' ),  
+			
+			IFNULL( #{videoSuperMainImage} , '' ) , 
+			(CASE WHEN #{useAt} IS NULL THEN 'Y' WHEN #{useAt} = '' THEN 'Y' ELSE #{useAt} END ),
+			(CASE WHEN #{delAt} IS NULL THEN 'N' WHEN #{delAt} = '' THEN 'N' ELSE #{delAt} END )
+		) 
+	</insert>
+	
+	<update id='update'>
+		UPDATE TB_VIDEO_SUPER SET 
+			VIDEO_SUPER_NM = #{videoSuperNm} , 
+			VIDEO_SUPER_EXPLAIN = IFNULL( #{videoSuperExplain} , '') ,
+			VIDEO_SUPER_ACTOR = IFNULL( #{videoSuperActor} , '') ,
+			VIDEO_SUPER_GENRE = IFNULL( #{videoSuperGenre} , ''),
+			VIDEO_SUPER_MAIN_IMAGE = IFNULL( #{videoSuperMainImage} , ''),
+			
+			USE_AT = (CASE WHEN #{useAt} IS NULL THEN 'Y' WHEN #{useAt} = '' THEN 'Y' ELSE #{useAt} END ),
+			DEL_AT = (CASE WHEN #{delAt} IS NULL THEN 'N' WHEN #{delAt} = '' THEN 'N' ELSE #{delAt} END )
+		WHERE VIDEO_SUPER_ID = #{videoSuperId}
+	</update>
+	
+	<update id='delete'>
+		UPDATE TB_VIDEO_SUPER SET 
+			DEL_AT = 'Y'
+		WHERE VIDEO_SUPER_ID = #{videoSuperId}
+	</update> 
+</mapper>

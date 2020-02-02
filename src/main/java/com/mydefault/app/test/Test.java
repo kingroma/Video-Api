@@ -1,20 +1,91 @@
 package com.mydefault.app.test;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.mydefault.app.ingest.service.IngestVO;
 
 public class Test {
 
 	public static void main(String[] args) {
 		try {
-			String str = "2019-11-11";
-			
-			System.out.println(str.replaceAll("-", ""));
-			// System.out.println(firstDoDate(minute));
-			
+			copyFileTest ( null , null );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+	}
+
+	public static IngestVO copyFileTest(IngestVO entity, HttpServletRequest request) throws Exception {
+		if ( entity == null ){
+			String videoStorage = "C:\\Users\\kingrome\\git-video\\WebDefault\\storage";
+			String ingestNm = "test123123";
+			
+			
+			File copyFile = new File("C:\\Users\\kingrome\\git-video\\WebDefault\\sample\\sample1.mp4");
+			
+			if (copyFile.exists()){
+				System.out.println("5");
+				fileCopy(copyFile,videoStorage,ingestNm);
+			}
+			
+		}
+		return entity;
+	}
+	
+	private static void fileCopy(File copyFile, String storagePath , String fileName){
+		FileInputStream fis = null ; 
+		FileOutputStream fos = null ; 
+		
+		try {
+			if ( storagePath != null && !( storagePath.endsWith("\\") || storagePath.endsWith("/") ) ){
+				storagePath += "/";
+				System.out.println(storagePath);
+			}
+			
+			File storageDirectory = new File ( storagePath );
+			if ( !storageDirectory.isDirectory() ){
+				storageDirectory.mkdir();
+			}
+			
+			
+			File targetFile = new File(storagePath + fileName);
+			
+			if ( targetFile.exists() ){
+				File tempFile = new File ( targetFile.getAbsolutePath() + ".")  ;
+				targetFile.renameTo(tempFile);
+			}
+			
+			
+			fis = new FileInputStream(copyFile);
+			fos = new FileOutputStream(targetFile) ;
+			byte[] b = new byte[4096];
+			int cnt = 0;
+			System.out.println(targetFile.getAbsolutePath());
+			while((cnt=fis.read(b)) != -1){
+				fos.write(b, 0, cnt);
+			}
+			
+			int pos = copyFile.getName().lastIndexOf( "." );
+			String ext = copyFile.getName().substring( pos + 1 );
+			System.out.println(ext);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				fis.close();
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	private static Date firstDoDate(long minute){

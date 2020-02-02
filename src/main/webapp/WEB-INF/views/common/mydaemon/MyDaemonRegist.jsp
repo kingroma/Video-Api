@@ -128,7 +128,7 @@
 	         			<tr>
 	         				<th class='text-center' style='vertical-align:top'><div>전달내용</div></th>
 				            <td colspan="3">
-				            	<textarea id='daemonParam' name='daemonParam' class='form-control'><c:out value="${myDaemonVO.daemonParam }"/></textarea>
+				            	<textarea id='daemonParam' name='daemonParam' class='form-control autosize'><c:out value="${myDaemonVO.daemonParam }"/></textarea>
 				            </td>
 	         			</tr>
 	       			</thead>
@@ -165,7 +165,6 @@
 		hourFake2.val(parseInt(parseInt(min)/60));
 		minuteFake2.val(parseInt(parseInt(min)%60));	
 		
-		autosize(document.getElementById('daemonParam'));
 	});
 	
 	

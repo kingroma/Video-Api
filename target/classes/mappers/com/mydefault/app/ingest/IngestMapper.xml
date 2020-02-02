@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mydefault.app.ingest.serviceimpl.IngestMapper">
+	<!--	<![CDATA[, ]]>	-->
+	<select id='list' resultType="MyMap">
+		SELECT
+			CAST(@rownum:=@rownum+1 AS UNSIGNED ) AS ROWNUM, 
+			A.* 
+			
+			FROM (
+				SELECT 
+					I.SUPER_INGEST_ID ,  
+					I.INGEST_ID , 
+					I.INGEST_NM , 
+					I.INGEST_TEXT ,
+					I.INGEST_REAL_PATH , 
+					I.USE_AT , 
+					I.DEL_AT 
+				    
+				FROM TB_VIDEO_INGEST I
+				WHERE I.DEL_AT = 'N'
+				ORDER BY I.SUPER_INGEST_ID 
+			) A
+		WHERE (@rownum:=0)=0
+		
+	</select>
+	
+	<select id='getNewSuperIngestId' resultType="String">
+		SELECT 	CONCAT('SUPER_', LPAD(COUNT(*) + 1,5,'0') ) FROM TB_VIDEO_INGEST 
+		WHERE SUPER_INGEST_ID LIKE 'SUPER_%'
+	</select>
+	
+	<select id='getNewIngestId' resultType="String">
+		SELECT 	CONCAT('INGEST_', LPAD(COUNT(*) + 1,5,'0') ) FROM TB_VIDEO_INGEST 
+		WHERE INGEST_ID LIKE 'INGEST_%'
+	</select>
+	
+	<select id='view' resultType='IngestVO'>
+		SELECT 
+			I.SUPER_INGEST_ID ,  
+			I.INGEST_ID , 
+			I.INGEST_NM , 
+			I.INGEST_TEXT ,
+			I.INGEST_REAL_PATH , 
+			I.USE_AT , 
+			I.DEL_AT 
+		    
+		FROM TB_VIDEO_INGEST I
+		WHERE 
+			I.DEL_AT = 'N' 
+		AND I.INGEST_ID = #{ingestId}
+	</select>
+	
+	<insert id='insert'>
+		INSERT INTO TB_VIDEO_INGEST(
+			SUPER_INGEST_ID ,  
+			INGEST_ID , 
+			INGEST_NM , 
+			INGEST_TEXT ,
+			INGEST_REAL_PATH ,
+			 
+			USE_AT , 
+			DEL_AT 
+		) VALUES (
+			#{superIngestId} , 
+			#{ingestId} , 
+			#{ingestNm} , 
+			IFNULL(#{ingestText} ,''), 
+			#{ingestRealPath} ,
+			
+			(CASE WHEN #{useAt} IS NULL THEN 'Y' WHEN #{useAt} = '' THEN 'Y' ELSE #{useAt} END ),
+			(CASE WHEN #{delAt} IS NULL THEN 'N' WHEN #{delAt} = '' THEN 'N' ELSE #{delAt} END )
+		) 
+	</insert>
+	
+	<update id='update'>
+		UPDATE TB_VIDEO_INGEST SET 
+			SUPER_INGEST_ID = #{superIngestId} ,
+			INGEST_NM = #{ingestNm} , 
+			INGEST_TEXT = IFNULL(#{ingestText} ,''), 
+			INGEST_REAL_PATH = #{ingestRealPath} ,
+			 
+			USE_AT = (CASE WHEN #{useAt} IS NULL THEN 'Y' WHEN #{useAt} = '' THEN 'Y' ELSE #{useAt} END )
+		WHERE INGEST_ID = #{ingestId}
+	</update>
+	
+	<update id='delete'>
+		UPDATE TB_VIDEO_INGEST SET 
+			DEL_AT = 'Y'
+		WHERE INGEST_ID = #{ingestId}
+	</update>
+</mapper>

@@ -14,12 +14,6 @@
 		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>       
     </context:component-scan>
 	
-	<!-- 메시지 빈 설정 -->
-    <bean id="myMessageSource" class="com.mydefault.app.common.util.MyMessageSource">
-        <property name="reloadableResourceBundleMessageSource">
-            <ref bean="messageSource" />
-        </property> 
-    </bean>    
 	<!-- 메시지 프로퍼티 설정-->	
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
@@ -30,4 +24,27 @@
 		<property name="cacheSeconds" value="60" />
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
+	
+    <bean id="myMessageSource" class="com.mydefault.app.common.util.MyMessageSource">
+        <property name="reloadableResourceBundleMessageSource">
+            <ref bean="messageSource" />
+        </property> 
+    </bean>    
+	
+	
+	<bean id="defaultSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:/properties/default</value>
+			</list>
+		</property>
+		<property name="cacheSeconds" value="60" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+	
+	<bean id="myDefaultSource" class="com.mydefault.app.common.util.MyDefaultSource">
+        <property name="reloadableResourceBundleMessageSource">
+            <ref bean="defaultSource" />
+        </property> 
+    </bean> 
 </beans>
